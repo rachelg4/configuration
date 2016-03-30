@@ -226,6 +226,17 @@ EDXAPP_ADVANCED_COMPONENT_TYPES:
   - 'library_content'
   - 'freetextresponse'
   - 'qualtricssurvey'
+EDXAPP_XBLOCKS_ALWAYS_IN_STUDIO:
+  - 'done'
+  - 'google-calendar'
+  - 'google-document'
+  - 'lti'
+  - 'split_test'
+  - 'word_cloud'
+  - 'imagemodal'
+  - 'library_content'
+  - 'freetextresponse'
+  - 'qualtricssurvey'
 
 EDXAPP_FEATURES:
   ACCESS_REQUIRE_STAFF_FOR_COURSE: true
@@ -1061,6 +1072,7 @@ cms_env_config:
   ADVANCED_COMPONENT_TYPES: "{{ EDXAPP_ADVANCED_COMPONENT_TYPES }}"
   SITE_NAME:  "{{ EDXAPP_CMS_SITE_NAME }}"
   GIT_REPO_EXPORT_DIR: "{{ EDXAPP_GIT_REPO_EXPORT_DIR }}"
+  XBLOCKS_ALWAYS_IN_STUDIO: "{{ EDXAPP_XBLOCKS_ALWAYS_IN_STUDIO }}"
 
 # install dir for the edx-platform repo
 edxapp_code_dir: "{{ edxapp_app_dir }}/edx-platform"
