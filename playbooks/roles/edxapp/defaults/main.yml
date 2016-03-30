@@ -197,6 +197,35 @@ EDXAPP_FEATURES_SEND_USERS_EMAILADDR_WITH_CODERESPONSE: true
 EDXAPP_FEATURES_STORE_BILLING_INFO: false
 EDXAPP_FEATURES_USE_CME_REGISTRATION: false
 EDXAPP_FEATURES_USE_MICROSITES: false
+EDXAPP_ADVANCED_COMPONENT_TYPES:
+  - 'annotatable'
+  - 'textannotation'  # module for annotating text (with annotation table)
+  - 'videoannotation'  # module for annotating video (with annotation table)
+  - 'imageannotation'  # module for annotating image (with annotation table)
+  - 'word_cloud'
+  - 'graphical_slider_tool'
+  - 'lti'
+  - 'concept'  # Concept mapper. See https://github.com/pmitros/ConceptXBlock
+  - 'done'  # Lets students mark things as done. See https://github.com/pmitros/DoneXBlock
+  - 'audio'  # Embed an audio file. See https://github.com/pmitros/AudioXBlock
+  - 'recommender'  # Crowdsourced recommender. Prototype by dli&pmitros. Intended for roll-out in one place in one course.
+  - 'split_test'
+  - 'combinedopenended'
+  - 'peergrading'
+  - 'notes'
+  - 'edx_sga'
+  - 'ooyala-player'
+  - 'imagemodal'
+  - 'google-calendar'
+  - 'google-document'
+  - 'submit-and-compare'
+  - 'poll'
+  - 'xblockmufi'
+  - 'grademebutton'
+  - 'image-coding'
+  - 'library_content'
+  - 'freetextresponse'
+  - 'qualtricssurvey'
 
 EDXAPP_FEATURES:
   ACCESS_REQUIRE_STAFF_FOR_COURSE: true
@@ -1029,6 +1058,7 @@ cms_auth_config:
   PARSE_KEYS: "{{ EDXAPP_PARSE_KEYS }}"
 cms_env_config:
   <<: *edxapp_generic_env
+  ADVANCED_COMPONENT_TYPES: "{{ EDXAPP_ADVANCED_COMPONENT_TYPES }}"
   SITE_NAME:  "{{ EDXAPP_CMS_SITE_NAME }}"
   GIT_REPO_EXPORT_DIR: "{{ EDXAPP_GIT_REPO_EXPORT_DIR }}"
 
