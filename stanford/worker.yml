@@ -16,7 +16,6 @@
     - "{{ secure_dir }}/vars/default/platform/git-identity.yaml"
     - "{{ secure_dir }}/vars/default/platform/env.yaml"
     - "{{ secure_dir }}/vars/default/platform/auth.yaml"
-    - "{{ secure_dir }}/vars/default/lms/features.yaml"
     - "{{ secure_dir }}/vars/default/lms/microsites.yaml"
     - "{{ secure_dir }}/vars/default/lms/env.yaml"
     - "{{ secure_dir }}/vars/default/lms/auth.yaml"
