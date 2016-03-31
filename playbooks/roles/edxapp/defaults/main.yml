@@ -17,6 +17,10 @@
 
 EDXAPP_TIME_ZONE_DISPLAYED_FOR_DEADLINES: 'US/Pacific'
 
+LANGUAGES:
+  - ['en', 'English']
+  - ['es-419', 'Español']
+
 # Bucket used for xblock file storage
 EDXAPP_XBLOCK_FS_STORAGE_BUCKET: "None"
 EDXAPP_XBLOCK_FS_STORAGE_PREFIX: "None"
