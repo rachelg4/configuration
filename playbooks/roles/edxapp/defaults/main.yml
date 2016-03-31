@@ -238,6 +238,13 @@ EDXAPP_ADVANCED_COMPONENT_TYPES:
   - 'library_content'
   - 'freetextresponse'
   - 'qualtricssurvey'
+edxapp_generic_default_docstring:
+  db: "{{ EDXAPP_MONGO_DB_NAME }}"
+  host: "{{ EDXAPP_MONGO_HOSTS }}"
+  password: "{{ EDXAPP_MONGO_PASSWORD }}"
+  port: "{{ EDXAPP_MONGO_PORT }}"
+  user: "{{ EDXAPP_MONGO_USER }}"
+  collection:  'modulestore'
 EDXAPP_XBLOCKS_ALWAYS_IN_STUDIO:
   - 'done'
   - 'google-calendar'
@@ -511,7 +518,7 @@ EDXAPP_CODE_JAIL_LIMITS:
   # infinite (512MiB in bytes)
   VMEM: 536870912
   # Time in seconds that the jailed process has to run.
-  REALTIME: 3
+  REALTIME: 5
   # Needs to be non-zero so that jailed code can use it as their temp directory.(1MiB in bytes)
   FSIZE: 1048576
   CPU: 1
