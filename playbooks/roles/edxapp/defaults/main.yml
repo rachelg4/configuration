@@ -243,6 +243,13 @@ EDXAPP_XBLOCKS_ALWAYS_IN_STUDIO:
   - 'library_content'
   - 'freetextresponse'
   - 'qualtricssurvey'
+HELP_MODAL_LINKS:
+  - 'url': 'https://stanfordonline.zendesk.com/hc/en-us/articles/202275024-How-do-I-create-an-account-'
+    'text': 'How to register an account'
+  - 'url': 'https://stanfordonline.zendesk.com/hc/en-us/articles/201864484-How-do-I-reset-my-password-'
+    'text': 'How to reset a password'
+  - 'url': 'https://stanfordonline.zendesk.com/hc/en-us/articles/203009244-How-do-I-enroll-in-a-course-'
+    'text': 'How to enroll in a course'
 
 EDXAPP_FEATURES:
   ACCESS_REQUIRE_STAFF_FOR_COURSE: true
