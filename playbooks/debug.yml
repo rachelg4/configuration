@@ -12,7 +12,6 @@
     - "{{ secure_dir }}/vars/common/platform/git-identity.yaml"
     - "{{ secure_dir }}/vars/common/platform/env.yaml"
     - "{{ secure_dir }}/vars/common/platform/auth.yaml"
-    - "{{ secure_dir }}/vars/common/lms/microsites.yaml"
     - "{{ secure_dir }}/vars/common/lms/env.yaml"
     - "{{ secure_dir }}/vars/common/lms/auth.yaml"
     - "{{ secure_dir }}/vars/common/cms/env.yaml"
