@@ -907,7 +907,7 @@ generic_env_config:  &edxapp_generic_env
   TENDER_SUBDOMAIN: "{{ EDXAPP_TENDER_SUBDOMAIN }}"
   WIKI_ENABLED: true
   SYSLOG_SERVER:  "{{ EDXAPP_SYSLOG_SERVER }}"
-  LOG_DIR:  "{{ COMMON_DATA_DIR }}/logs/edx"
+  LOG_DIR:  "/logs/edx"
   JWT_ISSUER: "{{ EDXAPP_LMS_BASE_SCHEME | default('https') }}://{{ EDXAPP_LMS_BASE }}/oauth2"
   JWT_EXPIRATION: '{{ EDXAPP_JWT_EXPIRATION }}'
 
