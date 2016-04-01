@@ -409,7 +409,7 @@ EDXAPP_EDXMKTG_USER_INFO_COOKIE_NAME: "edx-user-info"
 # Set this sets the url for static files
 # Override this var to use a CDN
 # Example: xxxxx.cloudfront.net/static/
-EDXAPP_STATIC_URL_BASE: "/static/"
+EDXAPP_STATIC_URL_BASE: None
 
 # Settings for Grade downloads
 EDXAPP_GRADE_STORAGE_TYPE: 'localfs'
