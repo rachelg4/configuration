@@ -495,7 +495,7 @@ EDXAPP_MICROSITE_ROOT_DIR: "{{ edxapp_app_dir }}/microsites"
 EDXAPP_MICROSITE_CONFIGURATION: {}
 # Instructor code that will not be run in the code sandbox
 EDXAPP_COURSES_WITH_UNSAFE_CODE: []
-EDXAPP_SESSION_COOKIE_DOMAIN: ""
+EDXAPP_SESSION_COOKIE_DOMAIN: ".{{ EDXAPP_LMS_BASE }}"
 EDXAPP_SESSION_COOKIE_NAME: "sessionid"
 
 # XML Course related flags
