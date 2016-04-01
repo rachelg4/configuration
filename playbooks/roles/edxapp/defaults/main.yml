@@ -244,6 +244,11 @@ edxapp_generic_default_docstring:
   port: "{{ EDXAPP_MONGO_PORT }}"
   user: "{{ EDXAPP_MONGO_USER }}"
   collection:  'modulestore'
+EDXAPP_PASSWORD_COMPLEXITY:
+  UPPER: 1
+  LOWER: 1
+  DIGITS: 1
+EDXAPP_PASSWORD_MIN_LENGTH: 8
 EDXAPP_XBLOCKS_ALWAYS_IN_STUDIO:
   - 'done'
   - 'google-calendar'
@@ -1041,6 +1046,8 @@ lms_env_config:
     python_bin: '{% if EDXAPP_PYTHON_SANDBOX %}{{ edxapp_sandbox_venv_dir }}/bin/python{% endif %}'
     limits: "{{ EDXAPP_CODE_JAIL_LIMITS }}"
     user: '{{ edxapp_sandbox_user }}'
+  PASSWORD_COMPLEXITY: "{{ EDXAPP_PASSWORD_COMPLEXITY }}"
+  PASSWORD_MIN_LENGTH: "{{ EDXAPP_PASSWORD_MIN_LENGTH }}"
   PDF_RECEIPT_TAX_ID: "{{ EDXAPP_PDF_RECEIPT_TAX_ID }}"
   PDF_RECEIPT_FOOTER_TEXT: "{{ EDXAPP_PDF_RECEIPT_FOOTER_TEXT }}"
   PDF_RECEIPT_DISCLAIMER_TEXT: "{{ EDXAPP_PDF_RECEIPT_DISCLAIMER_TEXT }}"
