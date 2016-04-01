@@ -330,8 +330,8 @@ EDXAPP_BOOK_URL: ""
 # if xqueue is run on the same server
 # as the lms (it's sent in the request)
 EDXAPP_SITE_NAME: 'localhost'
-EDXAPP_LMS_SITE_NAME: "{{ EDXAPP_SITE_NAME }}"
-EDXAPP_CMS_SITE_NAME: 'localhost'
+EDXAPP_LMS_SITE_NAME: "{{ EDXAPP_LMS_BASE }}"
+EDXAPP_CMS_SITE_NAME: "{{ EDXAPP_CMS_BASE }}"
 EDXAPP_MEDIA_URL:  "/media"
 EDXAPP_ANALYTICS_SERVER_URL:  ""
 EDXAPP_FEEDBACK_SUBMISSION_EMAIL: ""
