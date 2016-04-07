@@ -187,8 +187,8 @@ EDXAPP_PDF_RECEIPT_LOGO_PATH: ""
 
 EDXAPP_ACCOUNT_NAME: 'Stanford Online'
 EDXAPP_ANALYTICS_DASHBOARD_NAME: 'Stanford Online Insights'
-CERT_NAME_SHORT: 'Statement'
-CERT_NAME_LONG: 'Statement of Accomplishment'
+EDXAPP_CERT_NAME_SHORT: 'Statement'
+EDXAPP_CERT_NAME_LONG: 'Statement of Accomplishment'
 COURSE_ABOUT_VISIBILITY_PERMISSION: 'see_about_page'
 COURSE_CATALOG_VISIBILITY_PERMISSION: 'see_in_catalog'
 EDXAPP_FEATURES_AUTH_USE_OPENID_PROVIDER: true
@@ -899,6 +899,8 @@ generic_env_config:  &edxapp_generic_env
   ACCOUNT_NAME: "{{ EDXAPP_ACCOUNT_NAME }}"
   STUDIO_NAME: "{{ EDXAPP_STUDIO_NAME }}"
   STUDIO_SHORT_NAME: "{{ EDXAPP_STUDIO_SHORT_NAME }}"
+  CERT_NAME_SHORT: "{{ EDXAPP_CERT_NAME_SHORT }}"
+  CERT_NAME_LONG: "{{ EDXAPP_CERT_NAME_LONG }}"
   CERT_QUEUE:  'certificates'
   LOCAL_LOGLEVEL: "{{ EDXAPP_LOG_LEVEL }}"
   # default email backed set to local SMTP
