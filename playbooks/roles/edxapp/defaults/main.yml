@@ -522,7 +522,7 @@ EDXAPP_CODE_JAIL_LIMITS:
   # infinite (512MiB in bytes)
   VMEM: 536870912
   # Time in seconds that the jailed process has to run.
-  REALTIME: 5
+  REALTIME: 3
   # Needs to be non-zero so that jailed code can use it as their temp directory.(1MiB in bytes)
   FSIZE: 1048576
   CPU: 1
