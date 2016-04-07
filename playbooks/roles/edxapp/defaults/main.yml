@@ -17,9 +17,9 @@
 
 EDXAPP_TIME_ZONE_DISPLAYED_FOR_DEADLINES: 'US/Pacific'
 
-LANGUAGES:
-  - ['en', 'English']
-  - ['es-419', 'Latin-American Spanish']
+EDXAPP_LANGUAGES:
+  - ['en', "English"]
+  - ['es-419', "Espa\u00f1ol"]
 
 # Bucket used for xblock file storage
 EDXAPP_XBLOCK_FS_STORAGE_BUCKET: "None"
@@ -926,6 +926,7 @@ generic_env_config:  &edxapp_generic_env
   ANALYTICS_SERVER_URL:  "{{ EDXAPP_ANALYTICS_SERVER_URL }}"
   FEEDBACK_SUBMISSION_EMAIL: "{{ EDXAPP_FEEDBACK_SUBMISSION_EMAIL }}"
   TIME_ZONE: "{{ EDXAPP_TIME_ZONE }}"
+  LANGUAGES: "{{ EDXAPP_LANGUAGES }}"
   LANGUAGE_CODE: "{{ EDXAPP_LANGUAGE_CODE }}"
   MKTG_URL_LINK_MAP: "{{ EDXAPP_MKTG_URL_LINK_MAP }}"
   MKTG_URLS: "{{ EDXAPP_MKTG_URLS }}"
