@@ -232,6 +232,7 @@ EDXAPP_ADVANCED_COMPONENT_TYPES:
   - 'google-calendar'
   - 'google-document'
   - 'submit-and-compare'
+  - 'survey'
   - 'poll'
   - 'xblockmufi'
   - 'grademebutton'
