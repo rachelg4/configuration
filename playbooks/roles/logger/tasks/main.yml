@@ -1,0 +1,29 @@
+---
+- name: Update CA Certificates
+  shell: >
+    /usr/sbin/update-ca-certificates
+
+- name: Add user www-data
+  # This is the default user for nginx
+  user: >
+    name="{{ common_web_user }}"
+    shell=/bin/false
+
+- name: pip install virtualenv
+  pip: >
+    name="{{ item }}" state=present
+    extra_args="-i {{ COMMON_PYPI_MIRROR_URL }}"
+  with_items: common_pip_pkgs
+
+- name: Install rsyslog configuration for edX
+  template: >
+    dest=/etc/rsyslog.d/99-edx.conf
+    src=edx_logger_rsyslog.j2
+    owner=root group=root mode=644
+  notify: restart rsyslogd
+
+- name: Remove the default rsyslog configuration
+  file:
+    path=/etc/rsyslog.d/50-default.conf
+    state=absent
+  notify: restart rsyslogd

@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     logs.vm.network :private_network, ip: "192.168.9.90"
 
     logs.vm.provision :ansible do |ansible|
-      ansible.playbook = "../../../../ansible-vagrant-examples/elk/provisioning/elk/playbook.yml"
+      ansible.playbook = "../../../playbooks/vagrant-elk.yml"
       ansible.inventory_path = "../../../../ansible-vagrant-examples/elk/provisioning/elk/inventory"
       ansible.sudo = true
     end
@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     webs.vm.network :private_network, ip: "192.168.9.91"
 
     webs.vm.provision :ansible do |ansible|
-      ansible.playbook = "../../../../ansible-vagrant-examples/elk/provisioning/web/playbook.yml"
+      ansible.playbook = "../../../playbooks/vagrant-webtemp.yml"
       ansible.inventory_path = "../../../../ansible-vagrant-examples/elk/provisioning/web/inventory"
       ansible.sudo = true
     end
