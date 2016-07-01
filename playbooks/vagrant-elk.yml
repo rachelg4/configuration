@@ -42,7 +42,7 @@
 #    - geerlingguy.elasticsearch
     - elasticsearch
 #    - elasticsearch-monitor
-    - geerlingguy.elasticsearch-curator
+#    - geerlingguy.elasticsearch-curator
     - logstash-forwarder
 #    - geerlingguy.logstash-forwarder
     - kibana
