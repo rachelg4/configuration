@@ -19,11 +19,11 @@
     kibana_password: password
 
     logstash_monitor_local_syslog: false
-    logstash_ssl_key_file: elk-vagrant-example.key
-    logstash_ssl_certificate_file: elk-vagrant-example.crt
+    logstash_ssl_key_file: logstash-forwarder.key
+    logstash_ssl_certificate_file: logstash-forwarder.crt
 
     logstash_forwarder_logstash_server: logs
-    logstash_forwarder_ssl_certificate_file: elk-vagrant-example.crt
+    logstash_forwarder_ssl_certificate_file: logstash-forwarder.crt
     logstash_forwarder_files:
       - paths:
          - /var/log/auth.log
@@ -35,11 +35,18 @@
       apt: update_cache=yes cache_valid_time=86400
 
   roles:
-    - geerlingguy.java
+    - oraclejdk
+#    - geerlingguy.java
+    - nginx
     - geerlingguy.nginx
-    - geerlingguy.elasticsearch
+#    - geerlingguy.elasticsearch
+    - elasticsearch
+#    - elasticsearch-monitor
     - geerlingguy.elasticsearch-curator
-    - geerlingguy.kibana
-    - geerlingguy.logstash
+    - logstash-forwarder
 #    - geerlingguy.logstash-forwarder
+    - kibana
+#    - geerlingguy.kibana
+    - logstash
+#    - geerlingguy.logstash
     - logger
