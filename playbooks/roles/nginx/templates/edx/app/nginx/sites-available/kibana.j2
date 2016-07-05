@@ -1,68 +1,60 @@
-{%- if "kibana" in nginx_default_sites -%}
-  {%- set default_site = "default" -%}
-{%- else -%}
-  {%- set default_site = "" -%}
-{%- endif -%}
+user  {{ nginx_user }};
 
-upstream elasticsearch_server {
-		 server 127.0.0.1:9200;
+error_log  {{ nginx_error_log }};
+pid        {{ nginx_pidfile }};
+
+worker_processes  {{ nginx_worker_processes }};
+
+events {
+    worker_connections  {{ nginx_worker_connections }};
+    multi_accept {{ nginx_multi_accept }};
 }
 
-server {
-  # Kibana server, templated by ansible
+{% if nginx_extra_conf_options %}
+{{ nginx_extra_conf_options }}
+{% endif %}
 
-  {% if NGINX_ENABLE_SSL %}
+http {
+    include       {{ nginx_mime_file_path }};
+    default_type  application/octet-stream;
 
-  listen {{ KIBANA_NGINX_PORT }} {{ default_site }};
-  listen {{ KIBANA_SSL_NGINX_PORT }} {{ default_site }} ssl;
+    server_names_hash_bucket_size {{ nginx_server_names_hash_bucket_size }};
 
-  ssl_certificate /etc/ssl/certs/{{ NGINX_SSL_CERTIFICATE|basename }};
-  ssl_certificate_key /etc/ssl/private/{{ NGINX_SSL_KEY|basename }};
+    client_max_body_size {{ nginx_client_max_body_size }};
 
-  {% else %}
-  listen {{ KIBANA_NGINX_PORT }} {{ default_site }};
-  {% endif %}
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
 
-  server_name {{ KIBANA_SERVER_NAME }};
+    access_log  {{ nginx_access_log }};
 
-  root {{ kibana_app_dir }}/htdocs;
+    sendfile        {{ nginx_sendfile }};
+    tcp_nopush      {{ nginx_tcp_nopush }};
+    tcp_nodelay     {{ nginx_tcp_nodelay }};
 
-  access_log {{ nginx_log_dir }}/kibana.access.log;
-  error_log {{ nginx_log_dir }}/kibana.error.log error;
+    keepalive_timeout  {{ nginx_keepalive_timeout }};
+    keepalive_requests {{ nginx_keepalive_requests }};
 
-  # Access restriction
-  {% include "basic-auth.j2" %}
+    #gzip  on;
 
-  # Set image format types to expire in a very long time
-  location ~* ^.+\.(jpg|jpeg|gif|png|ico)$ {
-      access_log off;
-      expires max;
-  }
+{% if nginx_proxy_cache_path %}
+    proxy_cache_path {{ nginx_proxy_cache_path }};
+{% endif %}
 
-  # Set css and js to expire in a very long time
-  location ~* ^.+\.(css|js)$ {
-      access_log off;
-      expires max;
-  }
+{% if nginx_extra_http_options %}
+    {{ nginx_extra_http_options }}
+{% endif %}
 
-  # Elastic Search
-  location /e {
-	  rewrite /e/(.*) /$1 break;
-	  proxy_set_header X-Real-IP $remote_addr;
-	  proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-
-	  proxy_redirect off;
-	  proxy_pass http://elasticsearch_server;
+{% for upstream in nginx_upstreams %}
+    upstream {{ upstream.name }} {
+{% if upstream.strategy is defined %}
+        {{ upstream.strategy }};
+{% endif %}
+{% for server in upstream.servers %}
+        server {{ server }};
+{% endfor %}
     }
+{% endfor %}
 
-  # Kibana
-  location / {
-	  root {{ kibana_app_dir }}/htdocs;
-	  index index.html;
-	  expires 1d;
-	  try_files $uri/ $uri;
-	  if (-f $request_filename) {
-		  break;
-	  }
-  }
+    include {{ nginx_conf_path }}/*.conf;
 }

@@ -6,13 +6,12 @@
   gather_facts: yes
 
   vars:
-    COMMON_WORKER_TYPE: loggingserver
     java_packages:
       - openjdk-7-jdk
 
-    nginx_user: www-data
-    nginx_worker_connections: 1024
-    nginx_remove_default_vhost: true
+#    nginx_user: www-data
+#    nginx_worker_connections: 1024
+#    nginx_remove_default_vhost: true
 
     kibana_server_name: logs
     kibana_username: kibana
@@ -35,18 +34,14 @@
       apt: update_cache=yes cache_valid_time=86400
 
   roles:
+    - common
     - oraclejdk
-#    - geerlingguy.java
     - nginx
-    - geerlingguy.nginx
-#    - geerlingguy.elasticsearch
+#    - geerlingguy.nginx
     - elasticsearch
 #    - elasticsearch-monitor
 #    - geerlingguy.elasticsearch-curator
     - logstash-forwarder
-#    - geerlingguy.logstash-forwarder
     - kibana
-#    - geerlingguy.kibana
     - logstash
-#    - geerlingguy.logstash
     - logger

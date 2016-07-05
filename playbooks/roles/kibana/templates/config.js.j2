@@ -25,7 +25,7 @@ function (Settings) {
 
 	{% else %}
 
-	  elasticsearch: "http://{{ KIBANA_SERVER_NAME }}:{{ KIBANA_NGINX_PORT }}",
+	  elasticsearch: "http://{{ KIBANA_SERVER_NAME }}:9200",
 
 	{% endif %}
 
