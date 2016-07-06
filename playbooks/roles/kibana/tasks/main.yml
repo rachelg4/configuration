@@ -35,6 +35,7 @@
 
 - name: copy config
   template: src=config.js.j2 dest={{ kibana_app_dir }}/htdocs/config.js
+  notify:
 
 #- name: copy config
 #  template: src=config.js.j2 dest={{ kibana_app_dir }}/share/{{ kibana_file }}/config/kibana.yml
@@ -45,11 +46,56 @@
 - name: Ensure kibana's nginx site is in place
   template: src=nginx.conf.j2 dest=/edx/app/nginx/sites-available/kibana mode=0755
 
-#- name: Ensure kibana's htpasswd file is in place
-#  copy: src=htpasswd dest=/edx/app/nginx/nginx.htpasswd mode=0644 owner=root group=root
-
 - name: Ensure default nginx site is not enabled
   file: state=absent path=/etc/nginx/sites-enabled/default
 
 - name: Ensure kibana nginx site is enabled
   file: state=link src=/etc/nginx/sites-available/kibana path=/etc/nginx/sites-enabled/kibana
+
+
+#- name: Expand Kibana.
+#  command: >
+#    tar -C {{ workspace }} -xvzf {{ workspace }}/{{ kibana_version }}.tar.gz
+#    creates={{ kibana_root }}/config.js
+
+- name: Ensure www directory exists.
+  file:
+    path: /var/www
+    state: directory
+
+- name: Ensure kibana directory exists.
+  file:
+    path: /var/www/kibana
+    state: directory
+
+- name: Move Kibana into place.
+  command: >
+    mv {{ kibana_app_dir }}/share/{{ kibana_version }} {{ kibana_root }}
+    creates={{ kibana_root }}/config.js
+
+- name: Copy Kibana configuration.
+  template:
+    src: config.js.j2
+    dest: "{{ kibana_root }}/config.js"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx
+
+- name: Copy Kibana nginx configuration.
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/kibana.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx
+
+- name: Create Kibana user account.
+  htpasswd:
+    path: /etc/nginx/conf.d/kibana.htpasswd
+    name: "kibana"
+    password: "password"
+    owner: root
+    mode: 0640
+  notify: restart nginx

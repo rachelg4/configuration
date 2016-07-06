@@ -28,24 +28,24 @@
 - name: ensure logstash has a logging dir at {{ logstash_log_dir }}
   file: path={{ logstash_log_dir }} owner=root group=root mode=0755 state=directory
 
-- name: Ensure Logstash SSL key pair directory exists.
-  file:
-    path: "{{ logstash_ssl_dir }}"
-    state: directory
+#- name: Ensure Logstash SSL key pair directory exists.
+#  file:
+#    path: "{{ logstash_ssl_dir }}"
+#    state: directory
 
-- name: Copy SSL cert for logstash-forwarder.
-  copy:
-    src: "{{ logstash_forwarder_ssl_certificate_file }}"
-    dest: "{{ logstash_ssl_dir }}/{{ logstash_forwarder_ssl_certificate_file | basename }}"
-    mode: 0644
-  notify: restart logstash-forwarder
+#- name: Copy SSL cert for logstash-forwarder.
+#  copy:
+#    src: "{{ logstash_forwarder_ssl_certificate_file }}"
+#    dest: "{{ logstash_ssl_dir }}/{{ logstash_forwarder_ssl_certificate_file | basename }}"
+#    mode: 0644
+#  notify: restart logstash-forwarder
 
-- name: Copy SSL key for logstash-forwarder.
-  copy:
-    src: "{{ logstash_forwarder_ssl_key_file }}"
-    dest: "{{ logstash_ssl_dir }}/{{ logstash_forwarder_ssl_key_file | basename }}"
-    mode: 0644
-  notify: restart logstash-forwarder
+#- name: Copy SSL key for logstash-forwarder.
+#  copy:
+#    src: "{{ logstash_forwarder_ssl_key_file }}"
+#    dest: "{{ logstash_ssl_dir }}/{{ logstash_forwarder_ssl_key_file | basename }}"
+#    mode: 0644
+#  notify: restart logstash-forwarder
 
 - name: ensure we have the specified logstash release
   get_url: url={{ logstash_url }} dest={{ logstash_app_dir }}/share/{{ logstash_file }}
@@ -56,8 +56,8 @@
 - name: start logstash
   action: service name=logstash state=started enabled=yes
 
-- name: Ensure we are running
-  wait_for: port={{ logstash_syslog_port }} host=localhost timeout=60
+#- name: Ensure we are running
+#  wait_for: port={{ logstash_syslog_port }} host=localhost timeout=60
 
 - name: Copy logstash es index template
   copy: src=template_logstash.json dest=/etc/elasticsearch/template_logstash.json

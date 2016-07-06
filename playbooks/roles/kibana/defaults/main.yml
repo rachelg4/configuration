@@ -7,3 +7,5 @@ kibana_app_dir: /edx/app/kibana
 kibana_file: kibana-4.5.1-linux-x64.tar.gz
 kibana_version: kibana-4.5.1-linux-x64
 kibana_url: "https://download.elastic.co/kibana/kibana/{{ kibana_file }}"
+kibana_root: /var/www/kibana
+workspace: /root

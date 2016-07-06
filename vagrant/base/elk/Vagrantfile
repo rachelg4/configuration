@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
-  # ELK server.
+# ELK server.
   config.vm.define "logs" do |logs|
     logs.vm.hostname = "logs"
     logs.vm.network :private_network, ip: "192.168.9.90"
@@ -29,15 +29,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # Web server.
-#  config.vm.define "webs" do |webs|
-#    webs.vm.hostname = "webs"
-#    webs.vm.network :private_network, ip: "192.168.9.91"
+  config.vm.define "webs" do |webs|
+    webs.vm.hostname = "webs"
+    webs.vm.network :private_network, ip: "192.168.9.91"
 
-#    webs.vm.provision :ansible do |ansible|
-#      ansible.playbook = "../../../playbooks/vagrant-webtemp.yml"
-#      ansible.inventory_path = "../../../../ansible-vagrant-examples/elk/provisioning/web/inventory"
-#      ansible.sudo = true
-#    end
-#  end
+    webs.vm.provision :ansible do |ansible|
+      ansible.playbook = "../../../playbooks/vagrant-webtemp.yml"
+      ansible.inventory_path = "../../../../ansible-vagrant-examples/elk/provisioning/web/inventory"
+      ansible.sudo = true
+    end
+  end
 
 end
