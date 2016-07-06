@@ -7,5 +7,3 @@ kibana_app_dir: /edx/app/kibana
 kibana_file: kibana-3.0.0.tar.gz
 kibana_version: kibana-3.0.0
 kibana_url: "https://download.elastic.co/kibana/kibana/{{ kibana_file }}"
-kibana_root: /var/www/kibana
-workspace: /root
