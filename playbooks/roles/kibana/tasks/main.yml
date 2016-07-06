@@ -35,7 +35,7 @@
     cp -R * {{ kibana_app_dir }}/htdocs/
 
 - name: copy config
-  template: src=config.js.j2 dest={{ kibana_app_dir }}/share/{{ kibana_version }}/config/kibana.yml
+  template: src=config.js.j2 dest={{ kibana_app_dir }}/share/{{ kibana_version }}/config.js
 
 #- name: actually install
 #  shell: >
