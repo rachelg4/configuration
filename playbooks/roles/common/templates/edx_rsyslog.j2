@@ -7,7 +7,7 @@
 #                       For more information see rsyslog.conf(5) and /etc/rsyslog.conf
 
 # To forward logs
-*.* @@192.168.9.90:10514
+*.* @@{{ RSYSLOG_SERVER_HOST }}:{{ RSYSLOG_SERVER_PORT }}
 
 #
 # First some standard log files.  Log by facility.
@@ -70,7 +70,7 @@ news.notice                     -/var/log/news/news.notice
 #
 # Emergencies are sent to everybody logged in.
 #
-*.emerg                                *
+*.emerg                                :omusrmsg:*
 
 #
 # I like to have messages displayed on the console, but only on a virtual
