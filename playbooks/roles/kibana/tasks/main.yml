@@ -35,13 +35,13 @@
     cp -R * {{ kibana_app_dir }}/htdocs/
 
 - name: copy config
-  template: src=config.js.j2 dest={{ kibana_app_dir }}/share/{{ kibana_version }}/config.js
+  template: src=config.js.j2 dest={{ kibana_app_dir }}/htdocs/config.js
 
 - name: Ensure kibana's nginx site is in place
   template: src=nginx.conf.j2 dest=/edx/app/nginx/sites-available/kibana mode=0755
 
 - name: Ensure kibana's nginx site is in place
-  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/kibana mode=0755
+  file: state=link src=/edx/app/nginx/sites-available/kibana dest=/etc/nginx/sites-available/kibana
 
 - name: Ensure default nginx site is not enabled
   file: state=absent path=/etc/nginx/sites-enabled/default

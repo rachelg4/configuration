@@ -40,7 +40,7 @@ server {
   # Kibana
   location / {
       root {{ kibana_app_dir }}/htdocs;
-      index index.html index.py;
+      index index.html;
       expires 1d;
       try_files $uri/ $uri;
       if (-f $request_filename) {
