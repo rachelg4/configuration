@@ -6,10 +6,29 @@
 #
 #                       For more information see rsyslog.conf(5) and /etc/rsyslog.conf
 
-# To forward logs
-*.* @@{{ RSYSLOG_SERVER_HOST }}:{{ RSYSLOG_SERVER_PORT }}
 
-#
+
+
+  {% if LOGGER_TYPE == "receiver" %}
+
+  $ModLoad imtcp
+  $ModLoad imudp
+  $ModLoad imuxsock
+  $ModLoad imklog
+
+  $InputTCPServerAddress {{ RSYSLOG_SERVER_HOST }}
+  $InputTCPServerRun {{ RSYSLOG_SERVER_PORT }}
+
+  *.*                                                   /var/log/messages
+
+  {% endif %}
+  {% if LOGGER_TYPE == "sender" %}
+
+  *.* @@{{ RSYSLOG_SERVER_HOST }}:{{ RSYSLOG_SERVER_PORT }}
+    
+  {% endif %}
+
+
 # First some standard log files.  Log by facility.
 
 # don't escape newlines

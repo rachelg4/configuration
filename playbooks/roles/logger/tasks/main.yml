@@ -1,7 +1,0 @@
----
-- name: Install rsyslog configuration for edX
-  template: >
-    dest=/etc/rsyslog.d/99-edx.conf
-    src=edx_logger_rsyslog.j2
-    owner=root group=root mode=644
-  notify: restart rsyslogd

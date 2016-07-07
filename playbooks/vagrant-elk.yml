@@ -1,33 +1,10 @@
-# Ansible playbook for an ELK (Elasticsearch, Logstash, Kibana) logging server.
-#
-# @author Jeff Geerling (2014).
-
 - hosts: logs
   gather_facts: yes
 
   vars:
-    java_packages:
-      - openjdk-7-jdk
-
-#    nginx_user: www-data
-#    nginx_worker_connections: 1024
-#    nginx_remove_default_vhost: true
-
-    kibana_server_name: logs
-    kibana_username: kibana
-    kibana_password: password
-
-#    logstash_monitor_local_syslog: false
-#    logstash_ssl_key_file: logstash-forwarder.key
-#    logstash_ssl_certificate_file: logstash-forwarder.crt
-
+     LOGGER_TYPE: receiver
 #    logstash_forwarder_logstash_server: logs
 #    logstash_forwarder_ssl_certificate_file: logstash-forwarder.crt
-#    logstash_forwarder_files:
-#      - paths:
-#         - /var/log/auth.log
-#        fields:
-#          type: syslog
 
   pre_tasks:
     - name: Update apt cache if needed.
@@ -37,11 +14,6 @@
     - common
     - oraclejdk
     - nginx
-#    - geerlingguy.nginx
     - elasticsearch
-#    - elasticsearch-monitor
-#    - geerlingguy.elasticsearch-curator
-#    - logstash-forwarder
     - kibana
     - logstash
-    - logger
