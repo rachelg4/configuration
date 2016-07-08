@@ -5,9 +5,7 @@
 #  Default rules for rsyslog.
 #
 #                       For more information see rsyslog.conf(5) and /etc/rsyslog.conf
-
-
-
+#
 
   {% if LOGGER_TYPE == "receiver" %}
 
@@ -19,6 +17,7 @@
   $InputTCPServerAddress {{ RSYSLOG_SERVER_HOST }}
   $InputTCPServerRun {{ RSYSLOG_SERVER_PORT }}
 
+  *.*                                                     /var/log/messages
   *.*;auth,authpriv.none,local0.none,local1.non           /var/log/messages
   kern.*                                                  /var/log/messages
   mail.*                                                  /var/log/messages

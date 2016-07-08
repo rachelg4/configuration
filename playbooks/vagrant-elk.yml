@@ -4,6 +4,7 @@
   vars:
      LOGGER_TYPE: receiver
      RSYSLOG_SERVER_HOST: 192.168.33.10
+     nginx_sites: [kibana]
 #    logstash_forwarder_logstash_server: logs
 #    logstash_forwarder_ssl_certificate_file: logstash-forwarder.crt
 
