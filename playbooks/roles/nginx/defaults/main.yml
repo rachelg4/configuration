@@ -104,8 +104,8 @@ nginx_cfg:
   #   - link - turn on
   #   - absent - turn off
   sites_enabled:
-#    basic_auth: link
-#    edx_release: link
+    basic_auth: link
+    edx_release: link
     kibana: link
   # path to version files for the basic
   # nginx configuration
