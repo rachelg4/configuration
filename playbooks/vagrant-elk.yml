@@ -5,8 +5,11 @@
      LOGGER_TYPE: receiver
      RSYSLOG_SERVER_HOST: 192.168.33.10
      nginx_sites: [kibana]
-#    logstash_forwarder_logstash_server: logs
-#    logstash_forwarder_ssl_certificate_file: logstash-forwarder.crt
+     nginx_cfg:
+       sites_enabled:
+         kibana: link
+       version_html: "{{ nginx_app_dir }}/versions.html"
+       version_json: "{{ nginx_app_dir }}/versions.json"
 
   pre_tasks:
     - name: Update apt cache if needed.

@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     logs.vm.provision :ansible do |ansible|
       ansible.playbook = "../../../playbooks/vagrant-elk.yml"
-      ansible.inventory_path = "../../../playbooks/vagrant/inventory.ini" 
+      ansible.inventory_path = "../../../playbooks/vagrant/inventory_elk.ini" 
       ansible.sudo = true
     end
   end
@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     webs.vm.provision :ansible do |ansible|
       ansible.playbook = "../../../playbooks/vagrant-webtemp.yml"
-      ansible.inventory_path = "../../../playbooks/vagrant/inventory.ini" 
+      ansible.inventory_path = "../../../playbooks/vagrant/inventory_elk.ini" 
       ansible.sudo = true
     end
   end

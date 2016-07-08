@@ -106,7 +106,6 @@ nginx_cfg:
   sites_enabled:
     basic_auth: link
     edx_release: link
-    kibana: link
   # path to version files for the basic
   # nginx configuration
   version_html: "{{ nginx_app_dir }}/versions.html"

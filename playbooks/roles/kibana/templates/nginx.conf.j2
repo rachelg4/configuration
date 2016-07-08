@@ -43,8 +43,5 @@ server {
       index index.html;
       expires 1d;
       try_files $uri/ $uri;
-      if (-f $request_filename) {
-          break;
-      }
   }
 }
