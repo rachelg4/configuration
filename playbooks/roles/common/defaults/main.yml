@@ -128,5 +128,5 @@ common_redhat_variants:
   - CentOS
   - Red Hat Enterprise Linux
   - Amazon
-RSYSLOG_SERVER_HOST: 192.168.9.90
+RSYSLOG_SERVER_HOST: localhost
 RSYSLOG_SERVER_PORT: 10514

@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 # ELK server.
   config.vm.define "logs" do |logs|
     logs.vm.hostname = "logs"
-    logs.vm.network :private_network, ip: "192.168.9.90"
+    logs.vm.network :private_network, ip: "192.168.33.10"
 
     logs.vm.provision :ansible do |ansible|
       ansible.playbook = "../../../playbooks/vagrant-elk.yml"

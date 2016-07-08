@@ -8,6 +8,7 @@
 
   vars:
     LOGGER_TYPE: sender
+    RSYSLOG_SERVER_HOST: 192.168.33.10
     nginx_user: www-data
     nginx_worker_connections: 1024
     nginx_remove_default_vhost: true

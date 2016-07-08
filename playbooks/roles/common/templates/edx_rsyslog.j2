@@ -19,7 +19,11 @@
   $InputTCPServerAddress {{ RSYSLOG_SERVER_HOST }}
   $InputTCPServerRun {{ RSYSLOG_SERVER_PORT }}
 
-  *.*                                                   /var/log/messages
+  *.*;auth,authpriv.none,local0.none,local1.non           /var/log/messages
+  kern.*                                                  /var/log/messages
+  mail.*                                                  /var/log/messages
+  news.*                                                  /var/log/messages
+  *.emerg                                                 /var/log/messages
 
   {% endif %}
   {% if LOGGER_TYPE == "sender" %}

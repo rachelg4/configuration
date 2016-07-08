@@ -37,9 +37,6 @@
 - name: start logstash
   action: service name=logstash state=started enabled=yes
 
-#- name: Ensure we are running
-#  wait_for: port={{ logstash_syslog_port }} host=localhost timeout=60
-
 - name: Copy logstash es index template
   copy: src=template_logstash.json dest=/etc/elasticsearch/template_logstash.json
 
