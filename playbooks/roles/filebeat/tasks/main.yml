@@ -1,0 +1,22 @@
+- name: Ensure {{ filebeat_app_dir }} exists
+  file: path={{ filebeat_app_dir }} state=directory owner=root group=root mode=0755
+
+- name: ensure we have the specified filebeat release
+  get_url: url=https://download.elastic.co/beats/filebeat/filebeat_1.2.3_amd64.deb dest=/tmp/filebeat_1.2.3_amd64.deb
+
+- name: Install filebeat
+  shell: dpkg --skip-same-version -i /tmp/filebeat_1.2.3_amd64.deb
+  register: dpkg_result
+
+- name: copy config
+  template:
+    src: filebeat.yml
+    dest: "{{ filebeat_app_dir }}/filebeat.yml"
+    mode: 0744
+
+- name: Restart Filebeat
+  when: "dpkg_result.stdout.startswith('Selecting')"
+  service: name=filebeat state=restarted
+
+- name: Ensure filebeat is started and enabled on boot.
+  service: name=filebeat state=started enabled=yes

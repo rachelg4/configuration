@@ -1,8 +1,7 @@
 input {
-  file {
-    path => "/var/log/messages"
-    start_position => "beginning"
-    type => syslog
+  beats {
+    port => LOGSTASH_PORT
+    host => LOGSTASH_HOST
   }
 }
 

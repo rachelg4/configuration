@@ -16,3 +16,6 @@ logstash_rotate_cron:
 logstash_optimize_cron:
   hour: 6
   minute: 15
+
+LOGSTASH_PORT: 5044
+LOGSTASH_HOST: localhost

@@ -8,31 +8,6 @@
 
 #
 
-  {% if LOGGER_TYPE == "receiver" %}
-
-  $ModLoad imtcp
-  $ModLoad imudp
-  $ModLoad imuxsock
-  $ModLoad imklog
-
-  $InputTCPServerAddress {{ RSYSLOG_SERVER_HOST }}
-  $InputTCPServerRun {{ RSYSLOG_SERVER_PORT }}
-
-  *.*                                                     /var/log/messages
-  *.*;auth,authpriv.none,local0.none,local1.non           /var/log/messages
-  kern.*                                                  /var/log/messages
-  mail.*                                                  /var/log/messages
-  news.*                                                  /var/log/messages
-  *.emerg                                                 /var/log/messages
-
-  {% endif %}
-  {% if LOGGER_TYPE == "sender" %}
-
-  *.* @@{{ RSYSLOG_SERVER_HOST }}:{{ RSYSLOG_SERVER_PORT }}
-    
-  {% endif %}
-
-
 # First some standard log files.  Log by facility.
 
 # don't escape newlines
