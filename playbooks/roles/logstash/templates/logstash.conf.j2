@@ -9,9 +9,7 @@ input {
 filter {
   if [type] == "syslog" {
     grok {
-      match => { "message" => "<%{POSINT:syslog_pri}>%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{GREEDYDATA:syslog_message}" }
-      add_field => [ "received_at", "%{@timestamp}" ]
-      add_field => [ "received_from", "%{@source_host}" ]
+       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
     }
     syslog_pri { }
     date {
@@ -32,6 +30,9 @@ filter {
         replace => [ "@source_host", "%{syslog_hostname}" ]
         replace => [ "@message", "%{syslog_message}" ]
       }
+    }
+    if [tags] == "_grokparsefailure" {
+      drop { }
     }
     mutate {
       remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
