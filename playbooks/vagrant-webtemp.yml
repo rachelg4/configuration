@@ -8,7 +8,7 @@
 
   vars:
     LOGGER_TYPE: sender
-    RSYSLOG_SERVER_HOST: 192.168.33.10
+    LOGSTASH_HOST: 192.168.33.10
     nginx_user: www-data
     nginx_worker_connections: 1024
     nginx_remove_default_vhost: true
@@ -31,9 +31,9 @@
       apt: update_cache=yes cache_valid_time=86400
 
   roles:
-    - nginx
-#    - logstash-forwarder
-    - common
+#    - nginx
+#    - common
+#    - filebeat
 
   tasks:
     - name: Set up virtual host for testing.
