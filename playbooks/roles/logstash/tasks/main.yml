@@ -69,3 +69,10 @@
     minute={{ logstash_optimize_cron.minute }}
     job="/usr/bin/python {{ logstash_app_dir }}/share/logstash-elasticsearch-scripts/logstash_index_optimize.py -d {{ LOGSTASH_DAYS_TO_KEEP }} > {{ logstash_log_dir }}/optimize_cron"
   when: LOGSTASH_ROTATE|bool
+
+#- name: Setup beats plugin
+#  shell: |
+#    executable=/bin/bash
+#    creates=/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-input-beats-3.0.3
+#    chdir=/opt/logstash
+#    sudo LS_HEAP_SIZE=256m bin/logstash-plugin install --version 3.0.3 logstash-input-beats

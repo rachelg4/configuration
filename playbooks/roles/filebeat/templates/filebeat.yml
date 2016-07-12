@@ -7,13 +7,13 @@ filebeat:
       # For each file found under this path, a harvester is started.
       paths:
         - "/var/log/syslog"
-        - "/var/log/mail.*"
-        - "/var/log/kern.*"
-        - "/var/log/news.*"
-        - "/var/log/*.emerg"
-        - "/edx/var/log/elasticsearch/elasticsearch/*.log
-        - "/edx/var/log/nginx/*.log"
-        - "/edx/var/log/tracking/*.log"
+#        - "/var/log/mail.*"
+#        - "/var/log/kern.*"
+#        - "/var/log/news.*"
+#        - "/var/log/*.emerg"
+#        - "/edx/var/log/elasticsearch/elasticsearch/*.log"
+#        - "/edx/var/log/nginx/*.log"
+#        - "/edx/var/log/tracking/*.log"
         #- c:\programdata\elasticsearch\logs\*
 
       # Type of the files. Based on this the way the file is read is decided.
@@ -24,5 +24,8 @@ filebeat:
       # * stdin: Reads the standard in
       input_type: log
   output:
+    file:
+      pathname: "/tmp/filebeat"
+      filename: filebeat
     logstash:
       hosts: ["{{ LOGSTASH_HOST }}:5044"]

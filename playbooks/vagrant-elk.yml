@@ -1,5 +1,6 @@
 - hosts: logs
   gather_facts: yes
+  sudo: True
 
   vars:
      LOGGER_TYPE: receiver
@@ -22,3 +23,4 @@
     - elasticsearch
     - kibana
     - logstash
+    - filebeat
