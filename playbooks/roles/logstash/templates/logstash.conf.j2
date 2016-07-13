@@ -1,11 +1,16 @@
 input {
   beats {
-    port => LOGSTASH_PORT
-    host => LOGSTASH_HOST
+    port => 5044
+    type => beats
+#    host => 192.168.33.10
   }
 }
 
 filter {
+  multiline {
+    pattern => "^\s"
+    what => "previous"
+  }
   if [type] == "syslog" {
     grok {
        match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
@@ -30,9 +35,9 @@ filter {
         replace => [ "@message", "%{syslog_message}" ]
       }
     }
-    if [tags] == "_grokparsefailure" {
-      drop { }
-    }
+#    if ("_grokparsefailure" in [tags]) {
+#      drop {}
+#    }
     mutate {
       remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
     }

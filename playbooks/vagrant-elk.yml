@@ -19,9 +19,10 @@
       apt: update_cache=yes cache_valid_time=86400
 
   roles:
-#    - common
+    - common
     - oraclejdk
 #    - nginx
 #    - elasticsearch
 #    - kibana
     - logstash
+    - filebeat
