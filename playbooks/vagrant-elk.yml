@@ -21,8 +21,8 @@
   roles:
     - common
     - oraclejdk
-#    - nginx
-#    - elasticsearch
-#    - kibana
+    - nginx
+    - elasticsearch
+    - kibana
     - logstash
     - filebeat
