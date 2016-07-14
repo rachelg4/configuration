@@ -49,7 +49,7 @@ output {
   elasticsearch { }
   # And gzip for each host and program
   file {
-       path => '{{ logstash_data_dir }}/%{@source_host}/all.%{+yyyyMMdd}.gz'
+       path => '{{ logstash_app_dir }}/all_logs/%{beat.hostname}/all.%{+yyyyMMdd}.gz'
        gzip => true
   }
   # Should add option for S3 as well.

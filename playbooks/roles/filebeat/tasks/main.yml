@@ -14,9 +14,9 @@
     dest: "{{ filebeat_app_dir }}/filebeat.yml"
     mode: 0744
 
-- name: Restart Filebeat
-  when: "dpkg_result.stdout.startswith('Selecting')"
-  service: name=filebeat state=restarted
-
 - name: Ensure filebeat is started and enabled on boot.
   service: name=filebeat state=started enabled=yes
+
+- name: Restart Filebeat
+  shell: filebeat -c {{ filebeat_app_dir }}/filebeat.yml &
+

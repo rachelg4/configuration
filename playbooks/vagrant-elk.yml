@@ -1,12 +1,11 @@
 - hosts: logs
   gather_facts: yes
-#  sudo: True
+  sudo: True
 
   vars:
-     LOGGER_TYPE: receiver
      #local host when run inside devstack, IP of kibana/ealsticsearch host
      #run as two machines
-     RSYSLOG_SERVER_HOST: 192.168.33.10
+     LOGSTASH_SERVER_HOST: localhost
      nginx_sites: [kibana]
      nginx_cfg:
        sites_enabled:

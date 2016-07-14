@@ -5,13 +5,13 @@ filebeat:
     -
       paths:
         - /var/log/syslog
-#        - "/var/log/mail.*"
-#        - "/var/log/kern.*"
-#        - "/var/log/news.*"
-#        - "/var/log/*.emerg"
-#        - "/edx/var/log/elasticsearch/elasticsearch/*.log"
-#        - "/edx/var/log/nginx/*.log"
-#        - "/edx/var/log/tracking/*.log"
+        - "/var/log/mail.*"
+        - "/var/log/kern.*"
+        - "/var/log/news.*"
+        - "/var/log/*.emerg"
+        - "/edx/var/log/elasticsearch/elasticsearch/*.log"
+        - "/edx/var/log/nginx/*.log"
+        - "/edx/var/log/tracking/*.log"
         # - c:\programdata\elasticsearch\logs\*
 
       # Possible options are:
