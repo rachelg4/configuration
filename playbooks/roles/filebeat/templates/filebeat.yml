@@ -24,4 +24,4 @@ output:
   ### Logstash as output
   logstash:
     # The Logstash hosts
-    hosts: ["localhost:5044"]
+    hosts: ["{{ LOGSTASH_HOST }}:{{ LOGSTASH_PORT }}"]
