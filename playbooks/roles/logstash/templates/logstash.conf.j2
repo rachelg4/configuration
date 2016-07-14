@@ -2,7 +2,6 @@ input {
   beats {
     port => 5044
     type => beats
-#    host => 192.168.33.10
   }
 }
 
@@ -11,37 +10,32 @@ filter {
     pattern => "^\s"
     what => "previous"
   }
-  if [type] == "syslog" {
-    grok {
-       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
-    }
-    syslog_pri { }
-    date {
-      match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-    }
-    # Try and parse the tracking log json
-    # 142 is syslog facility 17 (local1) and Informational.
-    # This is used to reduce the number of errors in json parsing as
-    # tracking uses that facility and priority by default.
-    if "142" in [syslog_pri] {
-      json {
-        source => "syslog_message"
-        target => "tracking"
-      }
-    }
-    if !("_grokparsefailure" in [tags]) {
-      mutate {
-        replace => [ "@source_host", "%{syslog_hostname}" ]
-        replace => [ "@message", "%{syslog_message}" ]
-      }
-    }
-#    if ("_grokparsefailure" in [tags]) {
-#      drop {}
-#    }
-    mutate {
-      remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
+  grok {
+     match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+  }
+  syslog_pri { }
+  date {
+    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
+  }
+  # Try and parse the tracking log json
+  # 142 is syslog facility 17 (local1) and Informational.
+  # This is used to reduce the number of errors in json parsing as
+  # tracking uses that facility and priority by default.
+  if "142" in [syslog_pri] {
+    json {
+      source => "syslog_message"
+      target => "tracking"
     }
   }
+  if !("_grokparsefailure" in [tags]) {
+    mutate {
+      replace => [ "@source_host", "%{syslog_hostname}" ]
+      replace => [ "@message", "%{syslog_message}" ]
+    }
+  }
+#  mutate {
+#    remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
+#  }
 }
 
 output {
