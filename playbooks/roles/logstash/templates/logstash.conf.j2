@@ -10,12 +10,18 @@ filter {
     pattern => "^\s"
     what => "previous"
   }
-  grok {
-     match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+  if ("/edx/var/log/nginx/kibana.access.log" in [source]) {
+    grok {
+      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] \"%{WORD:method} %{GREEDYDATA:syslog_message}" }
+    }
+  } else {
+    grok {
+       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+    }
   }
   syslog_pri { }
   date {
-    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
+    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "DD MMM YYYY:HH:mm:ss ZZZ"]
   }
   # Try and parse the tracking log json
   # 142 is syslog facility 17 (local1) and Informational.
