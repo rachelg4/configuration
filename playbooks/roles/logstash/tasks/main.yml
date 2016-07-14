@@ -12,6 +12,15 @@
     repo: 'deb http://packages.elasticsearch.org/logstash/2.3/debian stable main'
     state: present
 
+- name: ensure logstash has a logging dir at {{ logstash_log_dir }}
+  file: path={{ logstash_log_dir }} owner=root group=logstash mode=0775 state=directory
+
+- name: ensure logstash has a configure dir at {{ logstash_app_dir }}
+  file: path={{ logstash_app_dir }}/etc owner=root group=root mode=0755 state=directory
+
+- name: ensure logstash has a folder for storing logs
+  file: path={{ logstash_app_dir }}/all_logs owner=root group=root mode=0777 state=directory
+
 - name: Check if Logstash is already installed.
   stat: path=/etc/init.d/logstash
   register: logstash_installed
@@ -31,20 +40,23 @@
   when: ansible_os_family == "Debian"
   notify: restart logstash
 
-- name: Create Logstash configuration files.
+- name: Overwrite some default configuration files.
   template:
-    src: "logstash.conf.j2"
-    dest: "/etc/logstash/conf.d/logstash.conf"
+    src: "logstash.init.j2"
+    dest: "/etc/default/logstash"
     owner: root
     group: root
     mode: 0644
   notify: restart logstash
 
-- name: ensure logstash has a logging dir at {{ logstash_log_dir }}
-  file: path={{ logstash_log_dir }} owner=root group=root mode=0755 state=directory
-
-- name: ensure logstash has a logging dir at {{ logstash_log_dir }}
-  file: path={{ logstash_app_dir }}/all_logs owner=root group=root mode=0777 state=directory
+- name: Create Logstash configuration files.
+  template:
+    src: "logstash.conf.j2"
+    dest: "/edx/app/logstash/etc/logstash.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart logstash
 
 - name: Checkout logstash rotation scripts
   git: repo={{ logstash_scripts_repo }} dest={{ logstash_app_dir }}/share/logstash-elasticsearch-scripts
