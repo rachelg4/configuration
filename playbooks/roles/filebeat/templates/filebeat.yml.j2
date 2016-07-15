@@ -9,9 +9,19 @@ filebeat:
         - "/var/log/kern.*"
         - "/var/log/news.*"
         - "/var/log/*.emerg"
-        - "{{ elasticsearch_log_dir }}/*.log"
+        - "{{ elasticsearch_log_dir }}/*"
         - "{{ nginx_log_dir }}/*.log"
         - "{{ COMMON_LOG_DIR }}/tracking/*.log"
+        - "{{ COMMON_LOG_DIR }}/cms/edx.log"
+        - "{{ COMMON_LOG_DIR }}/devpi/supervisor/*"
+        - "{{ COMMON_LOG_DIR }}/ecommerce/*"
+        - "{{ COMMON_LOG_DIR }}/ecommerce_worker/*"
+        - "{{ COMMON_LOG_DIR }}/lms/edx.log"
+        - "{{ logstash_log_dir }}/*"
+        - "{{ COMMON_LOG_DIR }}/mongo/*"
+        - "{{ COMMON_LOG_DIR }}/notifier/edx.log"
+        - "{{ COMMON_LOG_DIR }}/rabbitmq/*"
+        - "{{ COMMON_LOG_DIR }}/supervisor/*"
 
       input_type: log
 

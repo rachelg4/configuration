@@ -17,6 +17,12 @@
 - name: create symlink to {{ filebeat_app_dir }} for config
   file: src="/etc/filebeat/filebeat.yml" dest="{{ filebeat_app_dir }}/filebeat.yml" state=link
 
+- name: allow filebeat to access logs
+  file: 
+    path: /edx/var/log
+    mode: 0777
+    recurse: yes
+
 - name: Ensure filebeat is started and enabled on boot.
   service: name=filebeat state=started enabled=yes
 
