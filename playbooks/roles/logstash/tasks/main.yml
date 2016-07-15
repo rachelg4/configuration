@@ -18,6 +18,9 @@
 - name: ensure logstash has a configure dir at {{ logstash_app_dir }}
   file: path={{ logstash_app_dir }}/etc owner=root group=root mode=0755 state=directory
 
+- name: ensure logstash has a configure dir at {{ logstash_data_dir }}
+  file: path={{ logstash_data_dir }} owner=root group=root mode=0777 state=directory
+
 - name: ensure logstash has a folder for storing logs
   file: path={{ logstash_app_dir }}/all_logs owner=root group=root mode=0777 state=directory
 
@@ -44,17 +47,17 @@
   template:
     src: "logstash.init.j2"
     dest: "/etc/default/logstash"
-    owner: root
-    group: root
+    owner: logstash
+    group: logstash
     mode: 0644
   notify: restart logstash
 
 - name: Create Logstash configuration files.
   template:
     src: "logstash.conf.j2"
-    dest: "/edx/app/logstash/etc/logstash.conf"
-    owner: root
-    group: root
+    dest: "{{ logstash_app_dir }}/etc/logstash.conf"
+    owner: logstash
+    group: logstash
     mode: 0644
   notify: restart logstash
 
@@ -89,4 +92,4 @@
     logstash-output-file
 
 - name: Ensure Logstash is started and enabled on boot.
-  service: "name=logstash state=started enabled={{ logstash_enabled_on_boot }}"
+  service: "name=logstash state=started enabled=yes"

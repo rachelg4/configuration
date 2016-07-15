@@ -2,15 +2,15 @@
   file: path={{ filebeat_app_dir }} state=directory owner=root group=root mode=0777
 
 - name: ensure we have the specified filebeat release
-  get_url: url=https://download.elastic.co/beats/filebeat/filebeat_1.2.3_amd64.deb dest=/tmp/filebeat_1.2.3_amd64.deb
+  get_url: url={{ filebeat_url }} dest=/tmp/{{ filebeat_file }}
 
 - name: Install filebeat
-  shell: dpkg --skip-same-version -i /tmp/filebeat_1.2.3_amd64.deb
+  shell: dpkg --skip-same-version -i /tmp/{{ filebeat_file }}
   register: dpkg_result
 
 - name: copy config
   template:
-    src: filebeat.yml
+    src: filebeat.yml.j2
     dest: "/etc/filebeat/filebeat.yml"
     mode: 0744
 

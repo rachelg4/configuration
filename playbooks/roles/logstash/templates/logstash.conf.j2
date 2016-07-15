@@ -10,11 +10,11 @@ filter {
     pattern => "^\s"
     what => "previous"
   }
-  if ("/edx/var/log/nginx/kibana.access.log" in [source]) {
+  if ("{{ nginx_log_dir }}/kibana.access.log" in [source]) {
     grok {
       match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] \"%{WORD:method} %{GREEDYDATA:syslog_message}" }
     }
-  } else {
+  } else { #matches all rsyslog messages
     grok {
        match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
     }
@@ -38,10 +38,10 @@ filter {
       replace => [ "@source_host", "%{syslog_hostname}" ]
       replace => [ "@message", "%{syslog_message}" ]
     }
+    mutate {
+      remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
+    }
   }
-#  mutate {
-#    remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
-#  }
 }
 
 output {
@@ -49,7 +49,7 @@ output {
   elasticsearch { }
   # And gzip for each host and program
   file {
-       path => '{{ logstash_app_dir }}/all_logs/%{beat.hostname}/all.%{+yyyyMMdd}.gz'
+       path => '{{ logstash_data_dir }}/%{beat.hostname}/all.%{+yyyyMMdd}.gz'
        gzip => true
   }
   # Should add option for S3 as well.

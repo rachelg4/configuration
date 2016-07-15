@@ -4,3 +4,5 @@
 
 filebeat_app_dir: "{{ COMMON_APP_DIR }}/filebeat"
 filebeat_cfg_dir: "{{ COMMON_CFG_DIR }}/filebeat"
+filebeat_file: "filebeat_1.2.3_amd64.deb"
+filebeat_url: "https://download.elastic.co/beats/filebeat/{{ filebeat_file }}"

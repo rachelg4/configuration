@@ -9,14 +9,10 @@ filebeat:
         - "/var/log/kern.*"
         - "/var/log/news.*"
         - "/var/log/*.emerg"
-        - "/edx/var/log/elasticsearch/elasticsearch/*.log"
-        - "/edx/var/log/nginx/*.log"
-        - "/edx/var/log/tracking/*.log"
-        # - c:\programdata\elasticsearch\logs\*
+        - "{{ elasticsearch_log_dir }}/*.log"
+        - "{{ nginx_log_dir }}/*.log"
+        - "{{ COMMON_LOG_DIR }}/tracking/*.log"
 
-      # Possible options are:
-      # * log: Reads every line of the log file (default)
-      # * stdin: Reads the standard in
       input_type: log
 
 output:
