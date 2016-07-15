@@ -1,5 +1,5 @@
 - name: Ensure {{ filebeat_app_dir }} exists
-  file: path={{ filebeat_app_dir }} state=directory owner=root group=root mode=0755
+  file: path={{ filebeat_app_dir }} state=directory owner=root group=root mode=0777
 
 - name: ensure we have the specified filebeat release
   get_url: url=https://download.elastic.co/beats/filebeat/filebeat_1.2.3_amd64.deb dest=/tmp/filebeat_1.2.3_amd64.deb
@@ -11,12 +11,12 @@
 - name: copy config
   template:
     src: filebeat.yml
-    dest: "{{ filebeat_app_dir }}/filebeat.yml"
+    dest: "/etc/filebeat/filebeat.yml"
     mode: 0744
+
+- name: create symlink to {{ filebeat_app_dir }} for config
+  file: src="/etc/filebeat/filebeat.yml" dest="{{ filebeat_app_dir }}/filebeat.yml" state=link
 
 - name: Ensure filebeat is started and enabled on boot.
   service: name=filebeat state=started enabled=yes
-
-- name: Restart Filebeat
-  shell: filebeat -c {{ filebeat_app_dir }}/filebeat.yml &
 
