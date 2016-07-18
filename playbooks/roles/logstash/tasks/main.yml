@@ -35,13 +35,13 @@
 - name: Install Logstash.
   apt: pkg=logstash state=present
 
-- name: Add Logstash user to adm group (Debian).
-  user:
-    name: logstash
-    group: logstash
-    groups: adm
-  when: ansible_os_family == "Debian"
-  notify: restart logstash
+#- name: Add Logstash user to adm group (Debian).
+#  user:
+#    name: logstash
+#    group: logstash
+#    groups: adm
+#  when: ansible_os_family == "Debian"
+#  notify: restart logstash
 
 - name: Overwrite some default configuration files.
   template:
