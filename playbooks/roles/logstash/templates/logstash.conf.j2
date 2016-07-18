@@ -28,9 +28,9 @@ filter {
       match => { "message" => "%{GREEDYDATA:syslog_message}" }
       #date='Fri Jul 15 22:46:02 UTC 2016' vhost='/' queue='edx.cms.core.default' length=3
     }
-  } else if ("{{ COMMON_LOG_DIR }}/logstash/logstash.log" in [source]) {
+  } else if ("{{ logstash_log_dir }}/logstash.log" in [source]) {
     grok {
-      match => { "message" => "\{\:%{WORD}\=\>\"%{TIMESTAMP_ISO8601:syslog_timestamp}\"\, \:%{WORD}\=\>%{QUOTEDSTRING:syslog_message}(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>\:%{WORD:syslog_severity}|)\}" }
+      match => { "message" => "\{\:%{WORD}\=\>\"%{TIMESTAMP_ISO8601:syslog_timestamp}\"\, %{GREEDYDATA:syslog_message}\}" }
     }
   } else if ("{{ COMMON_LOG_DIR }}/lms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/cms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/motifier/edx.log" in [source]) {
     grok {
@@ -40,18 +40,18 @@ filter {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{WORD:method} %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("{{ COMMON_LOG_DIR }}/elasticsearch/elasticsearch.log" in [source]) {
+  } else if ("{{ elasticsearch_log_dir }}/elasticsearch.log" in [source]) {
     grok {
       match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:syslog_severity}\])%{GREEDYDATA:syslog_message}" }
     }
   } else { #matches all rsyslog messages
     grok {
-       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
     }
   }
   syslog_pri { }
   date {
-    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "DD MMM YYYY:HH:mm:ss ZZZ", "YYYY-MM-DDTHH:mm:ss.ssssss+ZZZZ"]
+    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "DD MMM YYYY:HH:mm:ss ZZZ", "ISO8601"]
   }
   # Try and parse the tracking log json
   # 142 is syslog facility 17 (local1) and Informational.
@@ -63,14 +63,24 @@ filter {
       target => "tracking"
     }
   }
+  if ([message] =~ /(?i)warn/ or "WARN" in [method]) {
+    mutate {
+      add_tag => "warning"
+    }
+  }
+  if ([message] =~ /(?i)error/) {
+    mutate {
+      add_tag => "error"
+    }
+  }
   if !("_grokparsefailure" in [tags]) {
     mutate {
-      replace => [ "@source_host", "%{syslog_hostname}" ]
+      replace => [ "@source_host", "%{host}" ]
       replace => [ "@message", "%{syslog_message}" ]
     }
-#    mutate {
-#      remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
-#    }
+    mutate {
+      remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
+    }
   }
 }
 
@@ -79,7 +89,7 @@ output {
   elasticsearch { }
   # And gzip for each host and program
   file {
-       path => '{{ logstash_data_dir }}/%{beat.hostname}/all.%{+yyyyMMdd}.gz'
+       path => '{{ logstash_data_dir }}/%{@source_host}/all.%{+yyyyMMdd}.gz'
        gzip => true
   }
   # Should add option for S3 as well.
