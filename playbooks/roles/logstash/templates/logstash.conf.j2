@@ -15,37 +15,43 @@ filter {
       match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] \"%{WORD:method} %{GREEDYDATA:syslog_message}" }
     }
   } else if ("{{ COMMON_LOG_DIR }}/tracking/tracking.log" in [source]) {
-    #{"username": "", "event_type": "/", "ip": "192.168.33.1", "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/601.6.17 (KHTML, like Gecko) Version/9.1.1 Safari/601.6.17", "host": "precise64", "referer": "", "accept_language": "en-us", "event": "{\"POST\": {}, \"GET\": {}}", "event_source": "server", "context": {"user_id": "", "org_id": "", "course_id": "", "path": "/"}, "time": "2016-07-15T21:08:52.465455+00:00", "page": null}
-
-#mongo
-#2016-07-15T22:47:36.436+0000 [clientcursormon]  mapped:240
-
-#rabbitmq
-#date='Fri Jul 15 22:46:02 UTC 2016' vhost='/' queue='edx.cms.core.default' length=3
-
-#logstash
-#{:timestamp=>"2016-07-15T22:56:34.845000+0000", :message=>"Pipeline main has been shutdown"}
-#{:timestamp=>"2016-07-15T22:56:46.967000+0000", :message=>"Defaulting pipeline worker threads to 1 because there are some filters that might not work with multiple worker threads", :count_was=>2, :filters=>["multiline"], :level=>:warn}
-
-#edx.log (cms, lms, notifier)
-#Jul 15 22:45:50 precise64 [service_variant=cms][elasticsearch][env:sandbox] INFO [precise64  27884] [base.py:49] - HEAD http://localhost:9200/courseware_index [status:200 request:0.005s]
-#Jul 15 22:45:53 precise64 [service_variant=cms][xmodule.modulestore.django][env:sandbox] INFO [precise64  27884] [django.py:112] - Sent course_published signal to <function _listen_for_course_publish at 0x4a52d70> with kwargs {'course_key': CourseLocator(u'edX', u'DemoX', u'Demo_Course', None, None)}. Response was: None
-
-#devpi
-#2016-07-15 16:16:31,287 INFO  NOCTX serverdir: /edx/var/devpi/data
-
-#supervisor
-#2016-03-07 22:54:57,636 INFO supervisord started with pid 25561
-2016-03-07 22:54:57,629 WARN No file matches via include "/edx/app/supervisor/conf.d/*.conf"
-
-  }else { #matches all rsyslog messages
     grok {
-       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp}%{SPACE}%{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{GREEDYDATA:syslog_message}" }
+    #{"username": "", "event_type": "/", "ip": "192.168.33.1", "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/601.6.17 (KHTML, like Gecko) Version/9.1.1 Safari/601.6.17", "host": "precise64", "referer": "", "accept_language": "en-us", "event": "{\"POST\": {}, \"GET\": {}}", "event_source": "server", "context": {"user_id": "", "org_id": "", "course_id": "", "path": "/"}, "time": "2016-07-15T21:08:52.465455+00:00", "page": null}
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/mongo/mongodb.log" in [source]) {
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} \[%{DATA:syslog_program}\] %{GREEDYDATA:syslog_message}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/rabbitmq/edx.cms.core.default.log" in [source]) {
+    grok {
+      match => { "message" => "%{GREEDYDATA:syslog_message}" }
+      #date='Fri Jul 15 22:46:02 UTC 2016' vhost='/' queue='edx.cms.core.default' length=3
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/logstash/logstash.log" in [source]) {
+    grok {
+      match => { "message" => "\{\:%{WORD}\=\>\"%{TIMESTAMP_ISO8601:syslog_timestamp}\"\, \:%{WORD}\=\>%{QUOTEDSTRING:syslog_message}(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>%{QUOTEDSTRING}|)(?:\, \:%{WORD}\=\>\:%{WORD:syslog_severity}|)\}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/lms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/cms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/motifier/edx.log" in [source]) {
+    grok {
+     match => { "message" => "%{SYSLOGTIMESTAMP:syslog} %{WORD:syslog_hostname} \[%{DATA:environment}\]\[%{DATA:syslog_program}\]\[%{DATA}] %{WORD:method} \[%{WORD}  %{POSINT:syslog_pid}\] \[%{DATA}\] \- %{GREEDYDATA:syslog_message}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/devpi/supervisor/supervisord.log" in [source] or "{{ COMMON_LOG_DIR }}/supervisor/supervisord.log" in [source]) {
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{WORD:method} %{GREEDYDATA:syslog_message}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/elasticsearch/elasticsearch.log" in [source]) {
+    grok {
+      match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:syslog_severity}\])%{GREEDYDATA:syslog_message}" }
+    }
+  } else { #matches all rsyslog messages
+    grok {
+       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
     }
   }
   syslog_pri { }
   date {
-    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "DD MMM YYYY:HH:mm:ss ZZZ"]
+    match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss", "DD MMM YYYY:HH:mm:ss ZZZ", "YYYY-MM-DDTHH:mm:ss.ssssss+ZZZZ"]
   }
   # Try and parse the tracking log json
   # 142 is syslog facility 17 (local1) and Informational.
