@@ -7,48 +7,44 @@ input {
 
 filter {
   multiline {
-    pattern => "^\s"
+    pattern => "^Connection|^Traceback|^\s"
     what => "previous"
+    stream_identity => "%{source}"
   }
-  if ("multiline" in [tags]) {
+  if ("/edx/var/log/nginx/kibana.access.log" in [source]) {
     grok {
-      match => { "message" => "%{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] %{QUOTEDSTRING:nginx_request} %{INT:nginx_status_code} %{INT:nginx_payload_size} %{QUOTEDSTRING:nginx_external_url}\; %{QUOTEDSTRING:nginx_user_agent}" }
+      #$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"
     }
-  } else if ("{{ nginx_log_dir }}/kibana.access.log" in [source]) {
+  } else if ("{{ COMMON_LOG_DIR }}/cms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/lms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/notifier/edx.log" in [source]) {
     grok {
-      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] \"%{WORD:method} %{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} \[%{WORD}\=%{DATA:service_variant}\]\[%{DATA:service_program}\]\[%{WORD}\:%{WORD:env}\] %{WORD:log_level} \[%{WORD}  %{POSINT:syslog_pid}\] \[%{DATA:filename}\:%{INT:line_number}\] \- %{GREEDYDATA:syslog_message}" }
+      #what is syslog_program actually ??
     }
+  } else if ("{{ COMMON_LOG_DIR }}/devpi/supervisor/supervisord.log" in [source] or "{{ COMMON_LOG_DIR }}/devpi/supervisor/devpi-server-stderr.log" in [source] or "{{ COMMON_LOG_DIR }}/supervisor/supervisord.log" in [source]) {
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{WORD:log_level} %{GREEDYDATA:syslog_message}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/rabbitmq/edx.cms.core.default.log" in [source]) {
+    grok {
+      match => { "message" => "%{WORD}\=%{QUOTEDSTRING:syslog_timestamp} %{WORD}\=%{QUOTEDSTRING:rabbitmq_vhost} %{WORD}\=%{QUOTEDSTRING:rabbitmq_queue} %{WORD}\=%{INT:rabbitmq_length}" }
+    }
+  } else if ("{{ COMMON_LOG_DIR }}/mongo/mongodb.log" in [source]) {
+    grok {
+      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} ?\[?%{DATA:moongo_context}?\]? %{GREEDYDATA:syslog_message}" }
+    } 
   } else if ("{{ COMMON_LOG_DIR }}/tracking/tracking.log" in [source]) {
     grok {
       match => { "message" => "%{GREEDYDATA:syslog_message}" }
     #{"username": "", "event_type": "/", "ip": "192.168.33.1", "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/601.6.17 (KHTML, like Gecko) Version/9.1.1 Safari/601.6.17", "host": "precise64", "referer": "", "accept_language": "en-us", "event": "{\"POST\": {}, \"GET\": {}}", "event_source": "server", "context": {"user_id": "", "org_id": "", "course_id": "", "path": "/"}, "time": "2016-07-15T21:08:52.465455+00:00", "page": null}
     }
-  } else if ("{{ COMMON_LOG_DIR }}/mongo/mongodb.log" in [source]) {
-    grok {
-      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} \[%{DATA:syslog_program}\] %{GREEDYDATA:syslog_message}" }
-    }
-  } else if ("{{ COMMON_LOG_DIR }}/rabbitmq/edx.cms.core.default.log" in [source]) {
-    grok {
-      match => { "message" => "%{GREEDYDATA:syslog_message}" }
-      #date='Fri Jul 15 22:46:02 UTC 2016' vhost='/' queue='edx.cms.core.default' length=3
-    }
   } else if ("{{ logstash_log_dir }}/logstash.log" in [source]) {
     grok {
       match => { "message" => "\{\:%{WORD}\=\>\"%{TIMESTAMP_ISO8601:syslog_timestamp}\"\, %{GREEDYDATA:syslog_message}\}" }
     }
-  } else if ("{{ COMMON_LOG_DIR }}/lms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/cms/edx.log" in [source] or "{{ COMMON_LOG_DIR }}/motifier/edx.log" in [source]) {
-    grok {
-      match => { "message" => "%{SYSLOGTIMESTAMP:syslog} %{WORD:syslog_hostname} \[%{DATA:environment}\]\[%{DATA:syslog_program}\]\[%{DATA}] %{WORD:method} \[%{WORD}  %{POSINT:syslog_pid}\] \[%{DATA}\] \- %{GREEDYDATA:syslog_message}" }
-      match => { "message" => "%{GREEDYDATA:syslog_message}" }
-    }
-  } else if ("{{ COMMON_LOG_DIR }}/devpi/supervisor/supervisord.log" in [source] or "{{ COMMON_LOG_DIR }}/supervisor/supervisord.log" in [source]) {
-    grok {
-      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{WORD:method} %{GREEDYDATA:syslog_message}" }
-      match => { "message" => "%{GREEDYDATA:syslog_message}" }
-    }
   } else if ("{{ elasticsearch_log_dir }}/elasticsearch.log" in [source]) {
     grok {
-      match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:syslog_severity}\])%{GREEDYDATA:syslog_message}" }
+      match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:syslog_severity}? \])%{GREEDYDATA:syslog_message}" }
     }
   } else { #matches all rsyslog messages
     grok {
@@ -69,14 +65,34 @@ filter {
       target => "tracking"
     }
   }
-  if ([message] =~ /(?i)warn/) {
+#  if ([message] =~ /(?i)warn/) {
+#    mutate {
+#      add_tag => "warning"
+#    }
+#  }
+#  if ([message] =~ /(?i)error/) {
+#    mutate {
+#      add_tag => " error"
+#    }
+#  }
+  if ([message] =~ /(?i)forums/) {
     mutate {
-      add_tag => "warning"
+      add_tag => "forums"
     }
   }
-  if ([message] =~ /(?i)error/) {
+  if ([message] =~ /(?i)certs/) {
     mutate {
-      add_tag => " error"
+      add_tag => "certs"
+    }
+  }
+  if ("cms" in [service_variant]) {
+    mutate {
+      add_tag => "cms"
+    }
+  }
+  if ("lms" in [service_variant]) {
+    mutate {
+      add_tag => "lms"
     }
   }
   if !("_grokparsefailure" in [tags]) {

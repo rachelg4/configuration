@@ -11,6 +11,7 @@ filebeat:
         - "/var/log/*.emerg"
         - "{{ elasticsearch_log_dir }}/*"
         - "{{ nginx_log_dir }}/*.log"
+        - "{{ nginx_log_dir }}/*.err"
         - "{{ COMMON_LOG_DIR }}/tracking/*.log"
         - "{{ COMMON_LOG_DIR }}/cms/edx.log"
         - "{{ COMMON_LOG_DIR }}/devpi/supervisor/*"
