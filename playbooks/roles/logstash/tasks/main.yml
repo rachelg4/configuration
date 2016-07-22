@@ -13,7 +13,7 @@
     state: present
 
 - name: ensure logstash has a logging dir at {{ logstash_log_dir }}
-  file: path={{ logstash_log_dir }} owner=root group=logstash mode=0775 state=directory
+  file: path={{ logstash_log_dir }} owner=root group=root mode=0775 state=directory
 
 - name: ensure logstash has a configure dir at {{ logstash_app_dir }}
   file: path={{ logstash_app_dir }}/etc owner=root group=root mode=0755 state=directory

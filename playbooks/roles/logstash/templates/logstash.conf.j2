@@ -7,73 +7,100 @@ input {
 
 filter {
   multiline {
-    pattern => "(^(?![0-9]|\[|date|%{SYSLOGTIMESTAMP})|^([0-9][0-9]\s))"
+    pattern => "(^(?![0-9]|[A-Z][a-z][a-z]|\[|date)|^([0-9][0-9]\s))"
     what => "previous"
     stream_identity => "%{source}"
   }
   if ("/edx/var/log/nginx/kibana.access.log" in [source]) {
     grok {
-      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\]%{GREEDYDATA:syslog_message}" }
-# %{QUOTEDSTRING:nginx_request} %{INT:nginx_status_code} %{INT:nginx_payload_size} %{QUOTEDSTRING:nginx_external_url}\; %{QUOTEDSTRING:nginx_user_agent}" }
+      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] %{QUOTEDSTRING:nginx_request} %{INT:nginx_status_code} %{INT:nginx_payload_size} %{QUOTEDSTRING:nginx_external_url}\; %{QUOTEDSTRING:nginx_user_agent}" }
+    }
+  } else if ("/edx/app/edxapp/edx-platform/logs/app1/nginx/carnegie_access.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/cms_access.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/convenience_access.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/lms_access.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/verfy_access.log" in [source]) {
+    grok {
+      match => { "message" => "%{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] %{QUOTEDSTRING:nginx_request} %{INT:nginx_status_code} %{INT:nginx_payload_size} \"\-\" %{QUOTEDSTRING:nginx_external_url}" }
+    }
+  } else if ("/edx/app/edxapp/edx-platform/logs/app1/nginx/access.log" in [source] or 
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/access-verify.log" in [source]) {
+    grok {
+      match => { "message" => "\- \- %{IP:ip_addr} \- \- \[%{MONTHDAY}\/%{MONTH}\/%{YEAR}\:%{HOUR}:?%{MINUTE}\:%{SECOND} %{ISO8601_TIMEZONE}\] ? %{QUOTEDSTRING:nginx_request} %{INT:nginx_status_code} %{INT:nginx_payload_size} %{DATA:nginx_payload_size} \"\-\" %{QUOTEDSTRING:nginx_external_url}" }
+    }
+  } else if ("/edx/app/edxapp/edx-platform/logs/app1/nginx/carnegie_error.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/cms_error.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/convenience_error.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/error.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/error-verify.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/lms_error.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/nginx/verify_error.log" in [source]) {
+    grok {
+      match => { "message" => "%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{HOUR}\:%{MINUTE}\:%{SECOND} \[%{WORD:log_level}\] %{GREEDYDATA:syslog_message}" }
     }
   } else if ("{{ COMMON_LOG_DIR }}/cms/edx.log" in [source] or 
     "{{ COMMON_LOG_DIR }}/lms/edx.log" in [source] or 
     "{{ COMMON_LOG_DIR }}/notifier/edx.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs2/util1/xqueue/edx.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs2/util1/notifier/edx.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/certs/edx.log" in [source]) {
+    "/edx/app/edxapp/edx-platform/logs/util1/xqueue/edx.log" in [source] or 
+    "/edx/app/edxapp/edx-platform/logs/util1/notifier/edx.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/certs/edx.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/lms/edx.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/cms/edx.log" in [source]) {
     grok {
       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} \[%{WORD}\=%{DATA:service_variant}\]\[%{DATA:service_program}\]\[%{WORD}\:%{USERNAME:env}\] %{WORD:log_level} \[%{WORD} ? %{POSINT:syslog_pid}\] \[%{DATA:filename}\:%{INT:line_number}\] \- %{GREEDYDATA:syslog_message}" }
     }
   } else if ("{{ COMMON_LOG_DIR }}/devpi/supervisor/supervisord.log" in [source] or 
     "{{ COMMON_LOG_DIR }}/devpi/supervisor/devpi-server-stderr.log" in [source] or 
     "{{ COMMON_LOG_DIR }}/supervisor/supervisord.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_high_mem_2-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_default_4-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_default_3-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_high_1-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_high_4-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_low_3-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_low_1-stderr.log" in [source]) {
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_high_mem_2-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_default_4-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_default_3-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_high_1-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_high_4-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_low_3-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_low_1-stderr.log" in [source]) {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{WORD:log_level} %{GREEDYDATA:syslog_message}" }
       match => { "message" => "\[%{TIMESTAMP_ISO8601:syslog_timestamp}\: %{LOGLEVEL:log_level}\/%{USERNAME:supervisor_program}\] %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms__high_mem_2-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_default_4-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_default_3-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_high_1-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_high_4-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/cms_low_3-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/lms_low_1-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/notifier-celery-workers-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/notifier-scheduler-stdout.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms__high_mem_2-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_default_4-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_default_3-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_high_1-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_high_4-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/cms_low_3-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/lms_low_1-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/notifier-celery-workers-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/notifier-scheduler-stdout.log" in [source]) {
     grok {
       match => { "message" => "%{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/notifier-celery-workers-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/notifier-scheduler-stderr.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/notifier-celery-workers-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/notifier-scheduler-stderr.log" in [source]) {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} \[%{LOGLEVEL:log_level}\] \[%{USERNAME}\=%{USERNAME:supervisor_program}\] %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/supervisord.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/supervisord.log" in [source] or 
+    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/supervisord.log" in [source]) {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{LOGLEVEL:log_level} %{WORD:supervisor_result}\: %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/xqueue-stderr.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/cms-stderr.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/xqueue-stderr.log" in [source]) {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} \[%{POSINT:syslog_pid}\] \[%{LOGLEVEL:log_level}\] %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/xqueue-stdout.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/xqueue_consumer-stdout.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/supervisor/certs-stdout.log" in [source] or 
-    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/cms-stdout.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/xqueue-stdout.log" in [source] or 
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/xqueue_consumer-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/supervisor/certs-stdout.log" in [source] or 
+    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/cms-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/lms-stdout.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/cms-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/app1/supervisor/lms-stderr.log" in [source]) {
     grok {
       match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} %{LOGLEVEL:log_level} %{POSINT:syslog_pid} \[%{DATA:queue_service}\] %{DATA:filename}\:%{INT:line_number} \- %{GREEDYDATA:syslog_message}" }
     }
-  } else if ("/edx/app/edxapp/edx-platform/logs2/util1/supervisor/xqueue_consumer-stderr.log" in [source] or
-    "/edx/app/edxapp/edx-platform/logs2/util1/suoervisor/certs-stderr.log" in [source]) {
+  } else if ("/edx/app/edxapp/edx-platform/logs/util1/supervisor/xqueue_consumer-stderr.log" in [source] or
+    "/edx/app/edxapp/edx-platform/logs/util1/suoervisor/certs-stderr.log" in [source]) {
     grok {
       match => { "message" => "%{GREEDYDATA:syslog_message}" }
     }
