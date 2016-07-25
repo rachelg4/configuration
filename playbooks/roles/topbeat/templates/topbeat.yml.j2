@@ -1,0 +1,19 @@
+---
+input:
+  # In seconds, defines how often to read server statistics
+  period: {{ topbeat_period_seconds }}
+
+  # Regular expression to match the processes that are monitored
+  # By default, all the processes are monitored
+  procs: [".*"]
+
+  # Statistics to collect (all enabled by default)
+  stats:
+    system: true
+    proc: true
+    filesystem: true
+
+output:
+  logstash:
+    hosts: ["{{ LOGSTASH_HOST }}:{{ LOGSTASH_PORT }}"]
+    index: topbeat

@@ -117,7 +117,7 @@ filter {
     }
   } else if ("{{ COMMON_LOG_DIR }}/mongo/mongodb.log" in [source]) {
     grok {
-      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} ?\[?%{DATA:moongo_context}?\]? %{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} ?\[?%{DATA:mongo_context}?\]? %{GREEDYDATA:syslog_message}" }
     } 
   } else if ("{{ COMMON_LOG_DIR }}/tracking/tracking.log" in [source] or 
     "/edx/app/edxapp/edx-platform/logs/app1/tracking/tracking.log" in [source]) {
