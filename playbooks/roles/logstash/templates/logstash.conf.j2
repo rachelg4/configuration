@@ -130,7 +130,7 @@ filter {
     }
   } else if ("{{ elasticsearch_log_dir }}/elasticsearch.log" in [source]) {
     grok {
-      match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:syslog_severity}? \])%{GREEDYDATA:syslog_message}" }
+      match => { "message" => "(?:\[%{TIMESTAMP_ISO8601:syslog_timestamp}\]\[%{WORD:log_level}? \])%{GREEDYDATA:syslog_message}" }
     }
   } else { #matches all rsyslog messages
     grok {
