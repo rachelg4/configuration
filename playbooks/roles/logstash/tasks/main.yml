@@ -49,7 +49,7 @@
     dest: "/etc/default/logstash"
     owner: logstash
     group: logstash
-    mode: 0644
+    mode: 0744
   notify: restart logstash
 
 - name: Create Logstash configuration files.
@@ -58,7 +58,7 @@
     dest: "{{ logstash_app_dir }}/etc/logstash.conf"
     owner: logstash
     group: logstash
-    mode: 0644
+    mode: 0744
   notify: restart logstash
 
 - name: Checkout logstash rotation scripts
@@ -86,10 +86,7 @@
 - name: plugins | installing logstash plugins
   command: "sudo /opt/logstash/bin/logstash-plugin install {{ item }}"
   notify: "restart logstash"
-  with_items:
-    logstash-input-beats
-    logstash-filter-multiline
-    logstash-output-file
+  with_items: LOGSTASH_PLUGINS
 
 - name: Ensure Logstash is started and enabled on boot.
   service: "name=logstash state=started enabled=yes"

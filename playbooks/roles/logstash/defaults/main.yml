@@ -12,6 +12,10 @@ logstash_file: "logstash-{{ LOGSTASH_VERSION }}-flatjar.jar"
 logstash_url: "https://download.elastic.co/logstash/logstash/{{ logstash_file }}" 
 logstash_python_requirements:
   - pyes==0.19.0
+LOGSTASH_PLUGINS:
+  - logstash-input-beats
+  - logstash-filter-multiline
+  - logstash-output-file
 logstash_scripts_repo: https://github.com/crashdump/logstash-elasticsearch-scripts
 logstash_rotate_cron:
   hour: 5

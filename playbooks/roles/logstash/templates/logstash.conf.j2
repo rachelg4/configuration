@@ -187,9 +187,10 @@ filter {
   if !("_grokparsefailure" in [tags]) {
     mutate {
       replace => [ "@source_host", "%{host}" ]
+      replace => [ "@message", "%{syslog_message}" ]
     }
     mutate {
-      remove_field => [ "syslog_hostname", "syslog_timestamp" ]
+      remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
       remove_tag => [ "beats_input_codec_plain_applied" ]
     }
   }
