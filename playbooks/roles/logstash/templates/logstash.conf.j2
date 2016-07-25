@@ -135,6 +135,8 @@ filter {
   } else { #matches all rsyslog messages
     grok {
       match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} \[%{WORD}\=%{DATA:service_variant}\]\[%{DATA:service_program}\]\[%{WORD}\:%{USERNAME:env}\] %{WORD:log_level} \[%{WORD} ? %{POSINT:syslog_pid}\] \[%{DATA:filename}\:%{INT:line_number}\] \- %{GREEDYDATA:syslog_message}" }
+      tag_on_failure => []
     }
   }
   }
