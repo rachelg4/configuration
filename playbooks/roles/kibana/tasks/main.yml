@@ -35,5 +35,4 @@
     cp -R * {{ kibana_app_dir }}/htdocs/
 
 - name: copy config
-  template: src=kibana.js.j2 dest={{ kibana_app_dir }}/htdocs/config.js
-
+  template: src=config.js.j2 dest={{ kibana_app_dir }}/htdocs/config.js

@@ -15,10 +15,5 @@
     mode: 0744
   notify: restart filebeat
 
-- name: create symlink to {{ filebeat_app_dir }} for config
-  file: src="/etc/filebeat/filebeat.yml" dest="{{ filebeat_app_dir }}/filebeat.yml" state=link
-  notify: restart filebeat
-
 - name: Ensure filebeat is started and enabled on boot.
   service: name=filebeat state=started enabled=yes
-
