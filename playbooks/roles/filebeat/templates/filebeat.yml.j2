@@ -2,13 +2,13 @@ filebeat:
   prospectors:
     -
       paths:
-        - "{{ nginx_log_dir }}/*access.log"
-        - "{{ nginx_log_dir }}/access-verify.log"
+        - "{{ COMMON_LOG_DIR }}/nginx/*access.log"
+        - "{{ COMMON_LOG_DIR }}/nginx/access-verify.log"
       document_type: nginx_access
     -
       paths:
-        - "{{ nginx_log_dir }}/*error.log"
-        - "{{ nginx_log_dir }}/error-verify.log"
+        - "{{ COMMON_LOG_DIR }}/nginx/*error.log"
+        - "{{ COMMON_LOG_DIR }}/nginx/error-verify.log"
       document_type: nginx_error
     -
       paths:
@@ -70,11 +70,11 @@ filebeat:
       document_type: tracking
     -
       paths:
-        - "{{ logstash_log_dir }}/logstash.log"
+        - "{{ COMMON_LOG_DIR }}/logstash/logstash.log"
       document_type: logstash
     -
       paths:
-        - "{{ elasticsearch_log_dir }}/elasticsearch.log"
+        - "{{ COMMON_LOG_DIR }}/elasticsearch/elasticsearch.log"
       document_type: elasticsearch
     -
       paths:
@@ -88,4 +88,4 @@ filebeat:
 output:
   logstash:
     hosts:
-      - "{{ BEAT_LOGSTASH_HOST }}:{{ BEAT_LOGSTASH_PORT }}"
+      - "{{ FILEBEAT_LOGSTASH_HOST }}:{{ FILEBEAT_LOGSTASH_PORT }}"
