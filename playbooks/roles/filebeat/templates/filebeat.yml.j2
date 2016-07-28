@@ -2,201 +2,80 @@ filebeat:
   prospectors:
     -
       paths:
-        - "{{ nginx_log_dir }}/kibana.access.log"
-      fields:
-        nginx_site: kibana
-        openedx_log_format: nginx_access
+        - "{{ nginx_log_dir }}/*access.log"
+        - "{{ nginx_log_dir }}/access-verify.log"
+      document_type: nginx_access
     -
       paths:
-        - "{{ nginx_log_dir }}/carnegie_access.log"
-        - "{{ nginx_log_dir }}/convenience_access.log"
-        - "{{ nginx_log_dir }}/verify_access.log"
-        - "{{ nginx_log_dir }}/access.log"
-        - "{{ nginx_log_dir }}/access_verify.log"
-      fields:
-        nginx_site: other
-        openedx_log_format: nginx_access
-    -
-      paths:
-        - "{{ nginx_log_dir }}/cms_access.log"
-      fields:
-        nginx_site: cms
-        openedx_log_format: nginx_access
-    -
-      paths:
-        - "{{ nginx_log_dir }}/lms_access.log"
-      fields:
-        nginx_site: lms
-        openedx_log_format: nginx_access
-    -
-      paths:
-        - "{{ nginx_log_dir }}/carnegie_error.log"
-        - "{{ nginx_log_dir }}/convenience_error.log"
-        - "{{ nginx_log_dir }}/error.log"
+        - "{{ nginx_log_dir }}/*error.log"
         - "{{ nginx_log_dir }}/error-verify.log"
-        - "{{ nginx_log_dir }}/verify_error.log"
-      fields:
-        nginx_site: other
-        openedx_log_format: nginx_error
-    -
-      paths:
-        - "{{ nginx_log_dir }}/cms_error.log"
-      fields:
-        nginx_site: cms
-        openedx_log_format: nginx_error
-    -
-      paths:
-        - "{{ nginx_log_dir }}/lms_error.log"
-      fields:
-        nginx_site: lms
-        openedx_log_format: nginx_error
+      document_type: nginx_error
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/cms/edx.log"
-      fields:
-        service_variant: cms
-        openedx_log_format: openedx_standard
-    -
-      paths:
         - "{{ COMMON_LOG_DIR }}/lms/edx.log"
-      fields:
-        service_variant: lms
-        openedx_log_format: openedx_standard
-    -
-      paths:
         - "{{ COMMON_LOG_DIR }}/notifier/edx.log"
-      fields:
-        service_variant: notifier
-        openedx_log_format: openedx_standard
-    -
-      paths:
         - "{{ COMMON_LOG_DIR }}/xqueue/edx.log"
-      fields:
-        service_variant: xqueue
-        openedx_log_format: openedx_standard
-    -
-      paths:
         - "{{ COMMON_LOG_DIR }}/certs/edx.log"
-      fields:
-        service_variant: certs
-        openedx_log_format: openedx_standard
+      document_type: openedx_standard
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/notifier-celery-workers-stderr.log"
         - "{{ COMMON_LOG_DIR }}/notifier-scheduler-stderr.log"
-      fields:
-        extra_check: notifier
-        openedx_log_format: supervisor_error
+      document_type: supervisor_error
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/devpi/supervisor/supervisord.log"
         - "{{ COMMON_LOG_DIR }}/devpi/supervisor/devpi-server-stderr.log"
-      fields:
-        openedx_log_format: supervisor_error
+      document_type: devpi
     -
       paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms__high_mem_2-stderr.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_default_4-stderr.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_high_4-stderr.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_low_3-stderr.log"
-      fields:
-        service_variant: cms
-        openedx_log_format: supervisor_error
+        - "{{ COMMON_LOG_DIR }}/supervisor/cms_*-stdout.log"
+        - "{{ COMMON_LOG_DIR }}/supervisor/lms_*-stdout.log"
+      document_type: supervisor_detail_stdout
     -
       paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms__high_mem_2-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_default_4-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_high_4-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms_low_3-stdout.log"
-      fields:
-        service_variant: cms
-        openedx_log_format: supervisor_detail_stdout
+        - "{{ COMMON_LOG_DIR }}/supervisor/cms_*-stderr.log"
+        - "{{ COMMON_LOG_DIR }}/supervisor/lms_*-stderr.log"
+      document_type: supervisor_detail_error
     -
       paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_default_3-stderr.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_high_4-stderr.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_low_1-stderr.log"
-      fields:
-        service_variant: lms
-        openedx_log_format: supervisor_error
-    -
-      paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_default_3-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_high_4-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms_low_1-stdout.log"
-      fields:
-        service_variant: lms
-        openedx_log_format: supervisor_detail_stdout
-    -
-      paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue-stderr.log"
-#        - "/edx/app/edxapp/edx-platform/logs/util1/supervisor/xqueue_consumer-stderr.log"
-      fields:
-        service_variant: xqueue
-        openedx_log_format: supervisor_error
-    -
-      paths:
+        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue*-stderr.log"
         - "{{ COMMON_LOG_DIR }}/supervisor/certs-stderr.log"
-      fields:
-        service_variant: certs
-        openedx_log_format: supervisor_error
+        - "{{ COMMON_LOG_DIR }}/supervisor/cms-stderr.log"
+        - "{{ COMMON_LOG_DIR }}/supervisor/lms-stderr.log"
+      document_type: supervisor_error
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/supervisor/supervisord.log"
-      fields:
-        openedx_log_format: supervisor_log
+      document_type: supervisor_log
     -
       paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue_consumer-stdout.log"
-      fields:
-        service_variant: xqueue
-        openedx_log_format: supervisor_stdout
-    -
-      paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/cert-stdout.log"
-      fields:
-        service_variant: certs
-        openedx_log_format: supervisor_stdout
-    -
-      paths:
+        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue*-stdout.log"
+        - "{{ COMMON_LOG_DIR }}/supervisor/certs-stdout.log"
         - "{{ COMMON_LOG_DIR }}/supervisor/cms-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/cms-stderr.log"
-      fields:
-        service_variant: cms
-        openedx_log_format: supervisor_stdout
-    -
-      paths:
         - "{{ COMMON_LOG_DIR }}/supervisor/lms-stdout.log"
-        - "{{ COMMON_LOG_DIR }}/supervisor/lms-stderr.log"
-      fields:
-        service_variant: lms
-        openedx_log_format: supervisor_stdout
+      document_type: supervisor_stdout
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/rabbitmq/edx.cms.core.default.log"
-      fields:
-        openedx_log_format: rabbitmq
+      document_type: rabbitmq
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/mongo/mongodb.log"
-      fields:
-        openedx_log_format: mongo
+      document_type: mongo
     -
       paths:
         - "{{ COMMON_LOG_DIR }}/tracking/tracking.log"
-      fields:
-        openedx_log_format: tracking
+      document_type: tracking
     -
       paths:
         - "{{ logstash_log_dir }}/logstash.log"
-      fields:
-        openedx_log_format: tracking
+      document_type: logstash
     -
       paths:
         - "{{ elasticsearch_log_dir }}/elasticsearch.log"
-      fields:
-        openedx_log_format: elasticsearch
+      document_type: elasticsearch
     -
       paths:
         - /var/log/syslog
@@ -204,12 +83,9 @@ filebeat:
         - "/var/log/kern.*"
         - "/var/log/news.*"
         - "/var/log/*.emerg"
-      fields:
-        openedx_log_format: rsyslog
-      input_type: log
+      document_type: rsyslog
 
 output:
-
   logstash:
     hosts:
-      - "{{ LOGSTASH_HOST }}:{{ LOGSTASH_PORT }}"
+      - "{{ BEAT_LOGSTASH_HOST }}:{{ BEAT_LOGSTASH_PORT }}"

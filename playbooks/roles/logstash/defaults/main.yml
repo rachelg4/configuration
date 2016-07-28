@@ -1,8 +1,9 @@
 ---
 LOGSTASH_DAYS_TO_KEEP: 30
 LOGSTASH_ROTATE: true
-LOGSTASH_HOST: localhost
 LOGSTASH_PORT: 5044
+LOGSTASH_ELASTICSEARCH_HOST: localhost
+LOGSTASH_ELASTICSEARCH_PORT: 9200
 logstash_app_dir: /edx/app/logstash
 logstash_log_dir: /edx/var/log/logstash
 logstash_data_dir: /edx/var/logstash/file_logs

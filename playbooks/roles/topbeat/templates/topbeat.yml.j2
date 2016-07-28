@@ -5,7 +5,7 @@ input:
 
   # Regular expression to match the processes that are monitored
   # By default, all the processes are monitored
-  procs: [".*"]
+  procs: {{ TOPBEAT_PROCS }}
 
   # Statistics to collect (all enabled by default)
   stats:
@@ -15,5 +15,5 @@ input:
 
 output:
   logstash:
-    hosts: ["{{ LOGSTASH_HOST }}:{{ LOGSTASH_PORT }}"]
+    hosts: ["{{ BEAT_LOGSTASH_HOST }}:{{ BEAT_LOGSTASH_PORT }}"]
     index: topbeat
