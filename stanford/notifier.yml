@@ -4,6 +4,8 @@
   sudo: True
   vars:
     secure_dir: '../../configuration-secure/ansible'
+    FILEBEAT_LOGSTASH_HOST: localhost
+    TOPBEAT_LOGSTASH_HOST: localhost
   vars_files:
     - "{{ secure_dir }}/vars/default/common.yaml"
     - "{{ secure_dir }}/vars/{{ env }}/notifier.yml"
@@ -11,3 +13,5 @@
   roles:
     - role: notifier
       tags: notifier
+    - filebeat
+    - topbeat

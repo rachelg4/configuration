@@ -7,6 +7,8 @@
   vars:
     secure_dir: '../../configuration-secure/ansible'
     local_dir: '../../configuration-secure/ansible/local'
+    FILEBEAT_LOGSTASH_HOST: localhost
+    TOPBEAT_LOGSTASH_HOST: localhost
   vars_files:
     - "{{ secure_dir }}/vars/default/common.yaml"
     - "{{ secure_dir }}/vars/default/platform/defaults.yaml"
@@ -25,3 +27,5 @@
       tags: nginx
     - role: xqueue
       tags: xqueue
+    - filbeat
+    - topbeat

@@ -9,6 +9,8 @@
     local_dir: '../../configuration-secure/ansible/local'
     COMMON_ENABLE_DATADOG: False
     COMMON_ENABLE_SPLUNKFORWARDER: False
+    FILEBEAT_LOGSTASH_HOST: localhost
+    TOPBEAT_LOGSTASH_HOST: localhost
   roles:
     - role: nginx
       nginx_sites:
@@ -16,3 +18,5 @@
     - insights
     - role: splunkforwarder
       when: COMMON_ENABLE_SPLUNKFORWARDER
+    - filbeat
+    - topbeat
