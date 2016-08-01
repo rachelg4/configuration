@@ -35,3 +35,8 @@
     - local_dev
     - demo
     - oauth_client_setup
+    - nginx
+    - kibana
+    - logstash
+    - filebeat
+    - topbeat

@@ -40,8 +40,12 @@ filebeat:
       document_type: supervisor_detail_error
     -
       paths:
-        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue*-stderr.log"
+        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue_consumer-stderr.log"
         - "{{ COMMON_LOG_DIR }}/supervisor/certs-stderr.log"
+      document_type: supervisor_error_traceonly
+    -
+      paths:
+        - "{{ COMMON_LOG_DIR }}/supervisor/xqueue-stderr.log"
         - "{{ COMMON_LOG_DIR }}/supervisor/cms-stderr.log"
         - "{{ COMMON_LOG_DIR }}/supervisor/lms-stderr.log"
       document_type: supervisor_error

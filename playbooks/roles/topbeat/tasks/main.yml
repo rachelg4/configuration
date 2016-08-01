@@ -1,12 +1,12 @@
 ---
-- name: Download topbeat 1.0.0
+- name: Download topbeat
   get_url:
-    url: "https://download.elastic.co/beats/topbeat/topbeat_1.0.0_amd64.deb"
+    url: "https://download.elastic.co/beats/topbeat/topbeat_{{ TOPBEAT_VERSION }}_amd64.deb"
     dest: "/tmp"
 
-- name: Install topbeat 1.0.0
+- name: Install topbeat
   apt:
-    deb: "/tmp/topbeat_1.0.0_amd64.deb"
+    deb: "/tmp/topbeat_{{ TOPBEAT_VERSION }}_amd64.deb"
 
 - name: Install httplib2
   pip:
@@ -19,16 +19,9 @@
   notify:
     - restart topbeat
 
-- name: Ensure {{ topbeat_app_dir }} exists
-  file: path={{ topbeat_app_dir }} state=directory owner=root group=root mode=0744
-
 - name: copy config
   template:
     src: topbeat.yml.j2
     dest: "/etc/topbeat/topbeat.yml"
     mode: 0744
-  notify: restart topbeat
-
-- name: create symlink to {{ topbeat_app_dir }} for config
-  file: src="/etc/topbeat/topbeat.yml" dest="{{ topbeat_app_dir }}/topbeat.yml" state=link
   notify: restart topbeat

@@ -7,11 +7,8 @@ input:
   # By default, all the processes are monitored
   procs: {{ TOPBEAT_PROCS }}
 
-  # Statistics to collect (all enabled by default)
-  stats:
-    system: true
-    proc: true
-    filesystem: true
+  # Statistics to collect
+  stats: {{ topbeat_stats }}
 
 output:
   logstash:
