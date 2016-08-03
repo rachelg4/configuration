@@ -1,0 +1,10 @@
+- name: Configure instance(s)
+  hosts: tag_role_logssender:&tag_environment_{{ env }}
+  sudo: True
+  gather_facts: True
+  vars:
+    FILEBEAT_LOGSTASH_HOST: localhost
+    TOPBEAT_LOGSTASH_HOST: localhost
+  roles:
+    - filebeat
+    - topbeat

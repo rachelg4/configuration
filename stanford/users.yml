@@ -2,12 +2,8 @@
   sudo: True
   vars:
     secure_dir: '../../configuration-secure/ansible'
-    FILEBEAT_LOGSTASH_HOST: localhost
-    TOPBEAT_LOGSTASH_HOST: localhost
   vars_files:
     - "{{ secure_dir }}/vars/{{ env }}/users.yml"
   roles:
     - role: user
       tags: users
-    - filebeat
-    - topbeat

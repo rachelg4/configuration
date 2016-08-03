@@ -19,7 +19,6 @@
   file: path={{ logstash_app_dir }}/{{ item }} owner=root group=root mode=0755 state=directory
   with_items:
     - etc
-    - all_logs
 
 - name: ensure logstash config is in place
   template: src=logstash.conf.j2 dest={{ logstash_app_dir }}/etc/logstash.conf owner=root group=root mode=0644

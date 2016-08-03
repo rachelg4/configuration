@@ -2,9 +2,6 @@
 
 - hosts: tag_Group_anothermulti
   serial: 2
-  vars:
-    FILEBEAT_LOGSTASH_HOST: localhost
-    TOPBEAT_LOGSTASH_HOST: localhost
   vars_files:
     - "{{ secure_dir }}/vars/default/edxapp.yml"
     - "{{ secure_dir }}/vars/stage/edxapp.yml"
@@ -28,8 +25,6 @@
       - lms
     - edxapp
     - ruby
-    - filebeat
-    - topbeat
   post_tasks:
     - name: Adding instance back to the ELB
       local_action: ec2_elb

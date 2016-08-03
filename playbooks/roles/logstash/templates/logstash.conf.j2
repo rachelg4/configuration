@@ -34,7 +34,7 @@ filter {
       grok {
         match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{WORD:syslog_hostname} \[%{WORD}\=%{DATA:service_variant}\]\[%{DATA:service_program}\]\[%{WORD}\:%{USERNAME:env}\] %{WORD:log_level} \[%{WORD} ? %{POSINT:syslog_pid}\] \[%{DATA:filename}\:%{INT:line_number}\] \- %{GREEDYDATA:@message}" }
       }
-    } else if [type] == "supervisor_error" {
+    } else if [type] == "supervisor_notifier_error" {
       grok {
         match => { "message" => "%{TIMESTAMP_ISO8601:syslog_timestamp} \[%{LOGLEVEL:log_level}\] \[%{USERNAME}\=%{USERNAME:supervisor_program}\] %{GREEDYDATA:@message}" }
       }
@@ -44,11 +44,11 @@ filter {
         match => { "message" => "\[%{TIMESTAMP_ISO8601:syslog_timestamp}\: %{LOGLEVEL:log_level}\/%{USERNAME:supervisor_program}\] %{GREEDYDATA:@message}" }
         tag_on_failure => []
       }
-    } else if [type] == "supervisor_detail_stdout" { 
+    } else if [type] == "supervisor_worker_stdout" { 
       grok {
         match => { "message" => "%{GREEDYDATA:@message}" }
       }
-    } else if [type] == "supervisor_detail_error" {
+    } else if [type] == "supervisor_worker_error" {
       grok {
         match => { "message" => "\[%{TIMESTAMP_ISO8601:syslog_timestamp}\: %{WORD:log_level}\/%{USERNAME:supervisor_function}\] %{GREEDYDATA:@message}" }
       }

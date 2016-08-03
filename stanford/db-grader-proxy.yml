@@ -5,8 +5,6 @@
   vars:
     secure_dir: '../../configuration-secure/ansible'
     local_dir:  '../../configuration-secure/ansible/local'
-    FILEBEAT_LOGSTASH_HOST: localhost
-    TOPBEAT_LOGSTASH_HOST: localhost
   roles:
     - role: gh_users
       gh_users:
@@ -16,5 +14,3 @@
         - jaericson
 #    - apache
     - db-grader-proxy
-    - filebeat
-    - topbeat
