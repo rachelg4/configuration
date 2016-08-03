@@ -7,7 +7,7 @@ input {
 }
 
 filter {
-  if [type] == "suervisor_error_traceonly {
+  if [type] == "suervisor_error_traceonly" {
     multiline {
       pattern => "(^(?!Traceback))"
       what => "previous"
