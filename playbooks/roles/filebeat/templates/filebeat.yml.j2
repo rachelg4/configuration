@@ -6,6 +6,7 @@ filebeat:
       document_type: nginx_access
       multiline:
         pattern: '^- - [[:digit:]]'
+        negate: true
         match: after
     -
       paths:
@@ -13,6 +14,7 @@ filebeat:
       document_type: nginx_error
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -26,6 +28,7 @@ filebeat:
       document_type: openedx_sandbox
       multiline:
         pattern: '^[[:upper:]][[:lower:]]{2}\s[[:digit:]]'
+        negate: true
         match: after
     -
       # these were not present in the sandbox
@@ -35,6 +38,7 @@ filebeat:
       document_type: supervisor_notifier_error
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -43,6 +47,7 @@ filebeat:
       document_type: devpi
       multiline:
         pattern: '^([[:digit:]]{4}|\[[[:digit:]]{4})'
+        negate: true
         match: after
     -
       # these were not present in the sandbox
@@ -50,29 +55,27 @@ filebeat:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/cms_*-stdout.log"
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/lms_*-stdout.log"
       document_type: supervisor_worker_stdout
+      multiline:
+        pattern: '^[[[:alpha:]]{5}]'
+        negate: true
+        match: after
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/cms_*-stderr.log"
-      document_type: supervisor_worker_cms_error
-      multiline:
-        pattern: '^[[:digit:]]{4}'
-        match: after
-    -
-      paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/lms_*-stderr.log"
-      document_type: supervisor_worker_lms_error
+      document_type: supervisor_worker_error
       multiline:
-        pattern: '^\[[[:digit:]]{4}'
+        pattern: '^[[:digit:]]{4}|^\[[[:digit:]]{4}'
+        negate: true
         match: after
     -
-      # These do not have time stamps, so their multiline concatenation
-      # is handled differently.
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/xqueue_consumer-stderr.log"
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/certs-stderr.log"
       document_type: supervisor_error_traceonly
       multiline:
         pattern: '^[[:upper:]][[:lower:]]{8}'
+        negate: true
         match: after
     -
       paths:
@@ -85,6 +88,7 @@ filebeat:
       document_type: supervisor_error
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -92,6 +96,7 @@ filebeat:
       document_type: supervisor_forum_error
       multiline:
         pattern: '^(I, \[|[[:digit:]]{3}.)'
+        negate: true
         match: after
     -
       paths:
@@ -99,6 +104,7 @@ filebeat:
       document_type: supervisor_log
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -116,6 +122,7 @@ filebeat:
       document_type: mongo
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -127,6 +134,7 @@ filebeat:
       document_type: logstash
       multiline:
         pattern: '^\{\:timestamp'
+        negate: true
         match: after
     -
       paths:
@@ -135,6 +143,7 @@ filebeat:
       document_type: elasticsearch
       multiline:
         pattern: '^\[[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -142,6 +151,7 @@ filebeat:
       document_type: mysql
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
     -
       paths:
@@ -153,6 +163,7 @@ filebeat:
       document_type: rsyslog
       multiline:
         pattern: '^[[:digit:]]{4}'
+        negate: true
         match: after
 
 output:
