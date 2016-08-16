@@ -1,21 +1,13 @@
 filebeat:
-  prospectors:
+ prospectors:
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/nginx/*access*.log"
       document_type: nginx_access
-      multiline:
-        pattern: '^- - [[:digit:]]'
-        negate: true
-        match: after
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/nginx/*error*.log"
       document_type: nginx_error
-      multiline:
-        pattern: '^[[:digit:]]{4}'
-        negate: true
-        match: after
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/cms/edx.log"
@@ -27,9 +19,10 @@ filebeat:
         - "{{ FILEBEAT_LOG_DIR }}/insights/edx.log"
       document_type: openedx_sandbox
       multiline:
-        pattern: '^[[:upper:]][[:lower:]]{2}\s[[:digit:]]'
+        pattern: '^[[:upper:]][[:lower:]]{2}[[:space::]]'
         negate: true
         match: after
+        timeout: 10s
     -
       # these were not present in the sandbox
       paths:
@@ -40,15 +33,12 @@ filebeat:
         pattern: '^[[:digit:]]{4}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/devpi/supervisor/supervisord.log"
         - "{{ FILEBEAT_LOG_DIR }}/devpi/supervisor/devpi-server-stderr.log"
       document_type: devpi
-      multiline:
-        pattern: '^([[:digit:]]{4}|\[[[:digit:]]{4})'
-        negate: true
-        match: after
     -
       # these were not present in the sandbox
       paths:
@@ -56,9 +46,10 @@ filebeat:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/lms_*-stdout.log"
       document_type: supervisor_worker_stdout
       multiline:
-        pattern: '^[[[:alpha:]]{5}]'
+        pattern: '^(\[[[:alpha:]]{5}\])'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/cms_*-stderr.log"
@@ -68,6 +59,7 @@ filebeat:
         pattern: '^[[:digit:]]{4}|^\[[[:digit:]]{4}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/xqueue_consumer-stderr.log"
@@ -77,6 +69,7 @@ filebeat:
         pattern: '^[[:upper:]][[:lower:]]{8}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/xqueue-stderr.log"
@@ -90,6 +83,7 @@ filebeat:
         pattern: '^[[:digit:]]{4}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/forum-stderr.log"
@@ -98,14 +92,11 @@ filebeat:
         pattern: '^(I, \[|[[:digit:]]{3}.)'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/supervisord.log"
       document_type: supervisor_log
-      multiline:
-        pattern: '^[[:digit:]]{4}'
-        negate: true
-        match: after
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/supervisor/xqueue*-stdout.log"
@@ -120,10 +111,6 @@ filebeat:
         - "{{ FILEBEAT_LOG_DIR }}/mongo/*.log"
         - "/var/log/mongo/*.log"
       document_type: mongo
-      multiline:
-        pattern: '^[[:digit:]]{4}'
-        negate: true
-        match: after
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/tracking/*.log"
@@ -136,6 +123,7 @@ filebeat:
         pattern: '^\{\:timestamp'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "{{ FILEBEAT_LOG_DIR }}/elasticsearch/*.log"
@@ -145,6 +133,7 @@ filebeat:
         pattern: '^\[[[:digit:]]{4}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - "/var/log/mysql/*.log"
@@ -153,6 +142,7 @@ filebeat:
         pattern: '^[[:digit:]]{4}'
         negate: true
         match: after
+        timeout: 10s
     -
       paths:
         - /var/log/syslog
@@ -161,10 +151,6 @@ filebeat:
         - "/var/log/news.*"
         - "/var/log/*.emerg"
       document_type: rsyslog
-      multiline:
-        pattern: '^[[:digit:]]{4}'
-        negate: true
-        match: after
 
 output:
   logstash:
