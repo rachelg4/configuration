@@ -1,0 +1,17 @@
+- name: Configure instance(s)
+  hosts: all
+  sudo: True
+  gather_facts: True
+  vars:
+    FILEBEAT_LOGSTASH_HOST: localhost
+    FILEBEAT_LOG_DIR: "/edx/app/edxapp/edx-platform/log"
+  roles:
+    - oraclejdk
+    - elasticsearch
+    - common
+    - role: nginx
+      nginx_sites:
+        - kibana
+    - kibana
+    - logstash
+    - filebeat

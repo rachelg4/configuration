@@ -79,6 +79,11 @@ filter {
     grok {
       match => { "message" => "%{GREEDYDATA:@message}" }
     }
+    if ([message] =~ /problem_check/) {
+      mutate {
+        add_field => { "track_problem_count" => "1" }
+      }
+    }
   } else if [type] == "logstash" {
     grok {
       match => { "message" => "\{\:%{WORD}\=\>\"%{TIMESTAMP_ISO8601:syslog_timestamp}\"\, %{GREEDYDATA:@message}\}" }
